@@ -3,7 +3,7 @@
 
 var Hud = function(){
 	var self = this;
-	$('.character').click(function(){
+	var $chars = $('.character').click(function(){
 		Test.assert(this.id.length == 2, "assuming c#");
 		var id = +this.id[1]; // so the actual id of the panel clicked can be found in the id in the dom
 		Test.assert(id in {1:1,2:1,3:1,4:1}, "assuming the id's are one of 1234");
@@ -15,6 +15,26 @@ var Hud = function(){
 		self.game.selectedCharacter ^= id; // xorring the selected character flag toggles the selection for this char
 		if (self.game.selectedCharacter & id) this.className = 'selected character';
 		else this.className = 'character';
+	});
+
+	$('#moreCowbell').click(function(){
+        self.game.addPlayer(new Player());
+        self.game.addPlayer(new Player());
+        self.game.addPlayer(new Player());
+        self.game.addPlayer(new Player());
+	});
+	
+	$('#toggleAll').click(function(){
+		if (self.game.selectedCharacter == (1|2|4|8)) {
+			// deselect all
+			$chars.click();
+		} else {
+			// select any unselected
+			if ((self.game.selectedCharacter & 1) == 0) $chars.filter(':nth-child(1)').click(); 
+			if ((self.game.selectedCharacter & 2) == 0) $chars.filter(':nth-child(2)').click(); 
+			if ((self.game.selectedCharacter & 4) == 0) $chars.filter(':nth-child(3)').click(); 
+			if ((self.game.selectedCharacter & 8) == 0) $chars.filter(':nth-child(4)').click();
+		} 
 	});
 };
 Hud.prototype = {
@@ -33,8 +53,4 @@ Hud.prototype = {
 		$('#c'+(c+1)+'-progress').width(s * 0.76);
 	},
 
-	selectCharacter: function(){
-		
-	},
-
-0:0};
+	0:0};

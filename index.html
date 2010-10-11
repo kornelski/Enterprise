@@ -8,38 +8,50 @@
 	</head>
 	<body id="enterprise">
 		<div id="hud">
-			<div id="c1" class="character">1
-				<div class="img"></div>
-				<div id="c1-progress" class="progress"></div>
-				<div id="c1-status" class="status">0%</div>
-			</div>
-			<div id="c2" class="character">2
-				<div class="img"></div>
-				<div id="c2-progress" class="progress"></div>
-				<div id="c2-status" class="status">0%</div>
-			</div>
-			<div id="c3" class="character">3
-				<div class="img"></div>
-				<div id="c3-progress" class="progress"></div>
-				<div id="c3-status" class="status">0%</div>
-			</div>
-			<div id="c4" class="character">4
-				<div class="img"></div>
-				<div id="c4-progress" class="progress"></div>
-				<div id="c4-status" class="status">0%</div>
-			</div>
+		    <div class="characters">
+			    <div id="c1" class="character">1
+    				<div class="img"></div>
+    				<div id="c1-progress" class="progress"></div>
+    				<div id="c1-status" class="status">0%</div>
+    			</div>
+    			<div id="c2" class="character">2
+    				<div class="img"></div>
+    				<div id="c2-progress" class="progress"></div>
+    				<div id="c2-status" class="status">0%</div>
+    			</div>
+    			<div id="c3" class="character">3
+    				<div class="img"></div>
+    				<div id="c3-progress" class="progress"></div>
+    				<div id="c3-status" class="status">0%</div>
+    			</div>
+    			<div id="c4" class="character">4
+    				<div class="img"></div>
+    				<div id="c4-progress" class="progress"></div>
+    				<div id="c4-status" class="status">0%</div>
+    			</div>
+		    </div>
+			<div id="toggleAll">All</div>
+			<div id="moreCowbell">More</div>
 		
 			<div id="hud-map">
 				<div id="hud-mini-focus"></div>
 			</div>
+			
+			<label><input id="sea" type="checkbox"/> Sea</label><br/>
+			<label><input id="collisions" type="checkbox"/> Show collision tiles</label><br/>
 		</div>
 		<canvas id="map" width="800" height="600"></canvas>
 		
+		<!-- application config -->
+		<script src="js/config.js"></script>
+
 		<script src="js/lib/jquery-1.4.2.min.js"></script>
 		<script src="js/lib/jquery.mousewheel.min.js"></script>
 		<script src="js/test.js"></script>
+		<script src="js/vector.js"></script>
 		<script src="js/model.js"></script>
 		<script src="js/gameobj.js"></script>
+		<script src="js/rocket.js"></script>
 		<script src="js/player.js"></script>
 		<script src="js/game.js"></script>
 		<script src="js/map.js"></script>
@@ -53,7 +65,6 @@
 		<script src="js/mapui.js"></script>
 		<script src="js/ui.js"></script>
 		<script src="js/hud.js"></script>
-		<script src="js/config.js"></script>
 		<script src="js/enemy.js"></script>
 		<!-- initialization data, should not depend on existence of other classes -->
 		<script src="js/tiles.js"></script>
@@ -63,6 +74,8 @@
 		<script>
 		    delete window.map; // stop HTML IDs leaking into global namespace
 		    delete window.hud;
+			delete window.sea;
+			delete window.collisions;
 		
 			var hud = new Hud(); // always use the same hud, but transfer it
 			new UI(new Game(), $('#enterprise'));

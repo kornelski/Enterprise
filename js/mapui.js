@@ -7,6 +7,9 @@ function MapUI(game,$canvas) {
     
     this.context = $canvas[0].getContext('2d');
     
+    this.selectionImage = new Image();
+    this.selectionImage.src = 'img/characters/selected.png'
+    
     // FIXE: repeat on resize
     this.width = this.context.canvas.width = $canvas.width();
     this.height = this.context.canvas.height = $canvas.height();
@@ -22,13 +25,22 @@ function MapUI(game,$canvas) {
 	    x: centertile.x - this.width/2,
 	    y: centertile.y - this.height/2
     };
-	
 
+    this.context.save();    
+    this.setZoom(1.0);
 }
 
 MapUI.prototype = {
     
-    seasick: 1,
+    setZoom: function(z) {
+        this.zoom = z;
+        this.context.restore();
+        this.context.scale(z,z);
+        this.context.save();        
+    },
+    
+    crazylevel: 0,
+    seasick: $('#sea')[0].checked,
     
     framenumber:0, // used by easter egg
     
@@ -38,10 +50,6 @@ MapUI.prototype = {
     // current map scroll offset
     scroll: {x:0,y:0},
     scrollSpeed: {x:0, y:0},
-    
-    imageForTile: function(tile) {
-        return tile ? this.tileimg : this.tileimg3;
-    },
     
     screenToCell: function(screenx, screeny) {
         screeny = (screeny / this.tile.height / 2);
@@ -57,13 +65,36 @@ MapUI.prototype = {
         };
     },
     
+    elevationForCell: function(cell) {
+        // var selectedtile = this.screenToCell(this.mouse.x + this.scroll.x,this.mouse.y+this.scroll.y);
+        // selectedtile.x = Math.floor(selectedtile.x);
+        // selectedtile.y = Math.floor(selectedtile.y);
+        // 
+        // var extra=0;
+        // if (cell.x==selectedtile.x && cell.y==selectedtile.y) {
+        //     extra = 10;
+        // }
+        var anim = this.crazylevel > 0.01 ? this.framenumber : 0;
+		
+        return this.crazylevel * (                 
+            Math.sin((anim/10)+cell.x/5)*20 - 
+            Math.sin((anim/12)+cell.y/3)*20 -
+            Math.sin((anim/2)+cell.y/10)*2 -
+            Math.sin((anim/2)+cell.x/20)*3);
+    },
+    
     render: function(cells,objects) {
+		// TOFIX: jquery not here etc
+		var crazy = this.seasick||$('#sea')[0].checked;
+
+		this.crazylevel = (this.crazylevel*10 + (crazy ? 1.5 : 0.0))/11;
         
         this.framenumber++;
         this.scroll.x += this.scrollSpeed.x;
         this.scroll.y += this.scrollSpeed.y;        
         
         this.context.clearRect(0,0,this.width,this.height);
+//        this.context.setTransform(1,0,1,0,0,0);
     
         Test.assert(this.tile.width>0,"loop must end");
         Test.assert(this.tile.height>0,"loop must end");
@@ -82,36 +113,48 @@ MapUI.prototype = {
         var screensubxpiel = this.cellToScreen(cell.x,cell.y);
         y -= screensubxpiel.y;
         
+        
+        this.game.objects.sort(function(a,b){
+            return a.screenZIndex - b.screenZIndex;
+        })
+        var lastObjectIndex=0;
+        
         do {
-            var x= ((line&1) ? this.tile.width/2 : 0) - screensubxpiel.x - this.tile.width/2;
+            var x= ((line&1) ? Math.floor(this.tile.width/2) : 0) - screensubxpiel.x - Math.floor(this.tile.width/2);
             do {
                 var cell = this.screenToCell(x+this.scroll.x,y+this.scroll.y);
                 cell.x = Math.floor(cell.x);
                 cell.y = Math.floor(cell.y);
                 
                 var img = this.map.getTile(cell).img;
-                var elevation = this.seasick ?                 
-                    Math.sin((this.framenumber/10)+cell.x/5)*20 - 
-                    Math.sin((this.framenumber/12)+cell.y/3)*20 -
-                    Math.sin((this.framenumber/2)+cell.y/10)*2 -
-                    Math.sin((this.framenumber/2)+cell.x/20)*3 : 0;
+                var elevation = this.elevationForCell(cell);
                                 
+                this.context.globalAlpha = 1.0;
                 this.context.drawImage(img, 
-                    x - img.width/2, 
-                    y - img.height + this.tile.height/2                     
+                    x - Math.floor(img.width/2), 
+                    y - img.height + Math.floor(this.tile.height/2)                     
                     - elevation
                     );
                 
                 x += this.tile.width;
-            } while(x < this.width);
+            } while(x < this.width/this.zoom);
+            
+            lastObjectIndex = this.drawObjectsUpTo(lastObjectIndex,y);
             
             y += this.tile.height;
             line++;
-        } while(y <= belowbottom);
+        } while(y <= belowbottom/this.zoom);
+            
+        lastObjectIndex = this.drawObjectsUpTo(lastObjectIndex,y);                
+    },
+    
+    drawObjectsUpTo: function(i,maxY) {
         
         var objects = this.game.objects;
-        for(var i=0; i < objects.length; i++) {
+        for(; i < objects.length; i++) {
             var o = objects[i];
+            o.frame(); // compute what's next
+            
 			Test.assert(o, "expecting the object to exist");
             var model = o.model;
 			Test.assert(model, "expecting the object to have a model");
@@ -124,24 +167,37 @@ MapUI.prototype = {
 				Test.assert(model.currentAnimation in model.animations, "the current animation should have a callback");
 				// so lets call it... back :)
 				model.animations[model.currentAnimation].call(model); // set context of call to the model
-				// its up to the animator to determine whether it should or should not run
-			}
+            }
 			
 			// get screen position of this object
             var pos = this.cellToScreen(o.origin.x,o.origin.y);
+            pos.x -= this.scroll.x;
+            pos.y -= this.scroll.y;
+
+            if (pos.y > maxY) break;
+            
+            var elevation = this.elevationForCell(o.origin);
 			Test.assert(model.img, "should have an image");
+			
+			// show selected characters
+			if (this.game.isSelected(o)) {
+			    var s = this.selectionImage;
+    			this.context.drawImage(s,
+    				pos.x - s.width/2,
+    				pos.y - elevation - s.height 
+    			);
+			}	            
+			
             // draw the correct sprite at the screen
+            this.context.globalAlpha = o.opacity;
 			this.context.drawImage(model.img,
 				model.width*model.currentSprite, 0, model.width, model.height,
-				pos.x - this.scroll.x,pos.y - this.scroll.y, model.width, model.height
+				pos.x - model.width/2,
+				pos.y - elevation - model.height, 
+				model.width, model.height
 			);
-			
-			
-			
-            //this.context.fillRect(pos.x - this.scroll.x,pos.y - this.scroll.y,20,20);
-            
-            
-        }
+       }    
+       return i;
     },
     
 	toString: function(){

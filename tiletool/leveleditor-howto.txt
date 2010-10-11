@@ -1,0 +1,19 @@
+There are two tools
+
+Save a picture as tiles.png, open convert.html in your browser. Right click the image and save it.
+
+Use Tiled Map Editor from http://www.mapeditor.org/ to create a map, with cells 52x26px size.
+
+Add a new tileset and choose the image created with convert.html.
+
+In the settings, make sure the XML-export is nog zipped.
+
+Export the map.
+
+In index.html, paste the exported map in the first area and click convert. In the second area, the code you
+want will appear. You can paste it in the right spot in maps.js.
+
+All tiles should be available in img/tiles/ and be named tileN.png, where N is the number of the tiles.
+
+
+

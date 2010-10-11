@@ -1,3 +1,13 @@
+
+
+@font-face {
+	font-family: 'SyndicateWarsFullRegular';
+	src: url('font/syndicate_wars_full_200_opentype-webfont.eot');
+	src: local('☺'), url('font/syndicate_wars_full_200_opentype-webfont.woff') format('woff'), url('font/syndicate_wars_full_200_opentype-webfont.ttf') format('truetype'), url('font/syndicate_wars_full_200_opentype-webfont.svg#webfontVFPDM5GX') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
 html, body {
 	margin: 0;
 	padding: 0;
@@ -22,19 +32,41 @@ html, body {
 }
 
 #hud {
+  	font-family:SyndicateWarsFullRegular,sans-serif;
 	position: absolute;
 	left: 0;
 	top: 0;
-	width: 193px;
+	width: 197px;
 	bottom: 0;
-	color: rgba(128, 0, 0, 0.2);
-	border: 3px outset orange;;
-	padding: 8px;
-	background-color: orange;
+	color: rgba(0, 255, 100, 0.8);
+	border: 0;
+	padding: 40px 8px 0;
+	background: black url(../img/hud.jpg) no-repeat 50% 0;
+}
+
+.characters {padding:10px 0 70px;overflow:hidden}
+
+#toggleAll {
+  content:url(../img/button.png);
+  position:absolute;
+  top:336px;left:58px;
+}
+#toggleAll:active {
+  top:335px; opacity:0.9;
+}
+
+#moreCowbell {
+  content:url(../img/roundbutton.png);
+  position:absolute;
+  top:556px;left:138px;
+}
+#moreCowbell:active {
+  top:557px;opacity:0.9;
 }
 
 div.character {
 	position: relative;
+	background: url(../img/hudplayer.jpg) no-repeat 50% 50%;
 	float: left;
 	width: 80px;
 	height: 120px;
@@ -42,18 +74,32 @@ div.character {
 	border: 2px solid black;
 	font-size: 100px;
 	xfont-family: helvetica, arial, sans-serif;
-	text-align: center;;
+	text-align: center;
 	z-index: 1;
 	cursor: default;
-
+	color:rgba(255,200,10,0.5);
 	user-select: none;
 	-o-user-select:none;
 	-moz-user-select: none;
 	-khtml-user-select: none;
 	-webkit-user-select: none;
+	
+	-webkit-transition: all 0.5s linear;
+	-moz-transition: all 0.5s linear;
+	
+	-webkit-border-radius: 10px 0 / 10px 0;
+	-moz-border-radius: 10px 0 / 10px 0;
+	
+	
 }
 div.character.selected {
-	border: 2px solid red;
+	border: 2px solid #3fa;
+	color: rgba(0, 255, 100, 0.8);
+	-webkit-box-shadow: inset 0 0 5px white;
+
+	-webkit-transform: rotate(3deg);
+	-moz-transform: rotate(3deg);
+	  
 }
 
 div.character div.img {
@@ -62,21 +108,23 @@ div.character div.img {
 	height: 45px;
 	left: 50px;
 	top: 2px;
-	background: url("../img/characters/character.png") no-repeat scroll -12px -7px transparent;
-	border: 1px inset orange;;
+	background: url("../img/characters/character.png") no-repeat scroll -12px -7px rgba(0,0,0,0.5);
+	border: 1px solid black;
 	cursor: default;
 }
 
 div.character div.status {
 	position: absolute;
-	border: 1px inset orange;
+	border: 1px inset rgba(255,0,0,0.5);
 	height: 15px;
 	bottom: 0;
 	width: 76px;
 	margin: 1px;
 	font-size: 11px;
-	color: rgba(128, 0, 0, 0.8);
-	background-color: rgba(0, 0, 0, 0.1);
+	color: red;
+	background-color: rgba(55, 0, 0, 0.3);
+	
+	-webkit-border-radius: 0 0 10px 0;
 
 }
 
@@ -90,9 +138,17 @@ div.character div.progress {
 	left: 1px;
 }
 
+label {
+	color: white; text-shadow: 1px 1px 0 black;
+    background: rgba(100,200,255,0.4);
+}
+
 #hud-map {
 	position: absolute;
-	top: 280px;
+	-webkit-transform: rotate(-2deg);
+	-moz-transform: rotate(-2deg);
+	opacity:0.5;
+	top: 600px;
 	left: 16px;
 	width: 172px;
 	height: 137px;
@@ -109,3 +165,6 @@ div.character div.progress {
 	margin-left: -25px;
 	border: 1px solid red;
 }
+
+
+

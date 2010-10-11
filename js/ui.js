@@ -11,7 +11,7 @@ function UI(game,$container) {
     
     // FIXME: these should be changed only betwen frames
     this.mapCanvas.mousemove(function(e){
-        self.mapUI.mouse = {x: e.offsetX, y:e.offsetY};
+        self.mapUI.mouse = {x: e.offsetX/self.mapUI.zoom, y:e.offsetY/self.mapUI.zoom};
     });
     
     this.mapCanvas.mousewheel(function(e){
@@ -24,14 +24,50 @@ function UI(game,$container) {
     this.mapCanvas[0].tabindex=0;
     this.mapCanvas.focus();
     
+    this.mapCanvas.click(function(e){        
+		var cell = self.mapUI.screenToCell(self.mapUI.mouse.x + self.mapUI.scroll.x,self.mapUI.mouse.y + self.mapUI.scroll.y)
+		
+        if (e.button > 0 || e.shiftKey) {
+            game.fire(cell);
+        }
+        else {
+		    game.walkPlayers(cell);
+	    }
+		return false;
+	});
+	
+	this.mapCanvas[0].oncontextmenu = function(){return false}
+    
+    
     // FIXME: speed should depend on fps
     $(document.body).keydown(function(e){  
         var speed = e.shiftKey ? 200 : 30;
         switch(e.keyCode) {
-            case 37: self.mapUI.scrollSpeed.x=-speed; break;
-            case 39: self.mapUI.scrollSpeed.x=+speed; break;
-            case 38: self.mapUI.scrollSpeed.y=-speed; break;
-            case 40: self.mapUI.scrollSpeed.y=+speed; break;
+			// move map with arrow keys
+            case 37: self.mapUI.scrollSpeed.x=-speed; break; // left
+            case 39: self.mapUI.scrollSpeed.x=+speed; break; // right
+            case 38: self.mapUI.scrollSpeed.y=-speed; break; // down
+            case 40: self.mapUI.scrollSpeed.y=+speed; break; // up
+            
+			// nudge players with wasd keys
+			case 87: game.walkPlayersRelative({x:0,y:-1}); break; // w
+			case 65: game.walkPlayersRelative({x:-1,y:0}); break; // a
+			case 83: game.walkPlayersRelative({x:0,y:1}); break; // s
+			case 68: game.walkPlayersRelative({x:1,y:0}); break; // d
+			
+            case 32: 
+                var cell = self.mapUI.screenToCell(self.mapUI.mouse.x + self.mapUI.scroll.x,
+                    self.mapUI.mouse.y + self.mapUI.scroll.y);
+                game.fire(cell); 
+                break;
+            
+			case 49: $('.character').filter(':nth-child(1)').click(); break; // 1
+			case 50: if (game.map.squadSize > 1) $('.character').filter(':nth-child(2)').click(); break; // 2
+			case 51: if (game.map.squadSize > 2) $('.character').filter(':nth-child(3)').click(); break; // 3
+			case 52: if (game.map.squadSize > 3) $('.character').filter(':nth-child(4)').click(); break; // 4
+			
+			
+			//default:console.log(e.keyCode);
         }
     });
     
@@ -42,7 +78,10 @@ function UI(game,$container) {
         }
     });
     
-    setInterval(function(){self.renderFrame()},50);
+    setInterval(function(){
+		self.renderFrame();
+		game.frame();
+	},50);
 }
 
 UI.prototype = {

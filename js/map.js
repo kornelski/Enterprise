@@ -20,36 +20,36 @@ Map.prototype = {
 		this.unitsY = mapLayout.get("height");
 		this.spawnPoint = mapLayout.get("spawnPoint");
 		this.objects = mapLayout.get("gameObjs");
+		this.squadSize = mapLayout.get("squadSize");
 	},
 	
 	initGrid: function(){
 		var mapLayout = this.mapLayout;
 		var tiles = Tiles; // Tiles is a global object literal, has tiles by name
+		//var collisions = Tile.get('collisions');
 		var grid = this.tileGrid = [];
 		for (var y=0, ny=this.unitsY; y<ny; ++y) {
 			grid[y] = [];
 			for (var x=0, nx=this.unitsX; x<nx; ++x) {
-				var tile = grid[y][x] = Tile.get(mapLayout.getTileName(x,y));
+				var tile = grid[y][x] = Tile.get(mapLayout.getTileName(y,x));
 				Test.assert(grid[y][x], "Expecting a tile");
 				Test.assert(grid[y][x] instanceof Tile, "expecting a real tile");
-				// preload that image
-				// tofix: load queue
-				if (!tile.img) {
-					tile.img = new Image();
-					tile.img.src = tile.src;
-				}
 			}
 		}
 	},
 	
 	getTile: function(cell) {
-	   if (cell.x < 0 || cell.x >= this.unitsX || cell.y < 0 || cell.y >= this.unitsY) {
-	       return this.tileGrid[0][0];
-       }
+	    if (cell.x < 0 || cell.x >= this.unitsX || cell.y < 0 || cell.y >= this.unitsY) {
+	        // TOFIX: static oob tile
+			return Tile.get('water');//tileGrid[0][0];
+        }
 	    Test.assert(Math.round(cell.x) == cell.x, "coords must be integer");
 	    Test.assert(Math.round(cell.y) == cell.y, "coords must be integer");
 	    Test.assert('undefined' != typeof this.tileGrid[cell.y], "row doesn't exist"+cell.y);
 	    Test.assert('undefined' != typeof this.tileGrid[cell.y][cell.x], "col doesn't exist"+cell.x);
+
+		if (this.tileGrid[cell.y][cell.x].collides && $('#collisions')[0].checked) return Tile.get('wall');
+		//else Test.assert(this.tileGrid[cell.y][cell.x].)
 
 	    return (this.tileGrid[cell.y] || this.tileGrid[0])[cell.x];
     },

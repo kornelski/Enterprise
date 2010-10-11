@@ -14,7 +14,24 @@ Tile.prototype = {
 
 0:0};
 
+Tile.cache = {};
 Tile.get = function(name){
+	if (name in Tile.cache) return Tile.cache[name];
+	
 	var data = Tiles[name];
-	return new Tile(data.width, data.height, data.src);
+	
+	if (!data) {
+	    data = { 
+			src:'img/tiles/tile' + name + '.png' 
+		};
+    }
+		
+	var tile = Tile.cache[name] = new Tile(data.width, data.height, data.src);
+	// preload that image
+	// tofix: load queue
+	tile.img = new Image();
+	tile.img.src = data.src;
+	tile.collides = data.collides;
+	
+	return tile;
 };

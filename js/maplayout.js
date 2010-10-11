@@ -13,7 +13,7 @@ var MapLayout = function(config){
 	Test.assert(config.name && typeof config.name == 'string', "Every map should have a name");
 	Test.assert(config.width > 0, "Every map should have a width");
 	Test.assert(config.height > 0, "Every map should have a height");
-	Test.assert(config.tiles && config.tiles instanceof Array, "Every map should have a set of tiles");
+	Test.assert(config.name == "random" || (config.tiles && config.tiles instanceof Array), "Every map should have a set of tiles");
 	
 	this.config = config;
 };
@@ -28,11 +28,22 @@ MapLayout.prototype = {
 	
 	// return the name of the tile at given coordinate
 	getTileName: function(x,y){
-		// return a random tile, for now
-		// TOFIX: remove when edwin finishes
-		var t = ["grass", "road", "road-left", "road-right", "water","tree"];
-		return t[Math.floor(Math.random()*t.length)];
-		
+	    
+	    if (!this.config.tiles) {
+		    // return a random tile, for now
+    		// TOFIX: remove when edwin finishes
+    		var t = ["tree","tree","tree","dirt0", "dirt1", "dirt2", "wall", "dirt3", "dirt4","dirt5","dirt6","dirt7",
+    		"dirt0", "dirt1", "dirt2", "dirt3", "dirt4","dirt5","dirt6","dirt7",
+    		"dirt0", "dirt1", "dirt2", "dirt3", "dirt4","dirt5","dirt6","dirt7",
+    		"dirt0", "dirt1", "dirt2", "dirt3", "dirt4","dirt5","dirt6","dirt7",
+    		"dirt0", "dirt1", "dirt2", "dirt3", "dirt4","dirt5","dirt6","dirt7",
+    		"dirt0", "dirt1", "dirt2", "dirt3", "dirt4","dirt5","dirt6","dirt7",
+    		"dirt0", "dirt1", "dirt2", "dirt3", "dirt4","dirt5","dirt6","dirt7",
+    		"dirt0", "dirt1", "dirt2", "dirt3", "dirt4","dirt5","dirt6","dirt7",
+    		"dirt0", "dirt1", "dirt2", "dirt3", "dirt4","dirt5","dirt6","dirt7",
+    		"brick0","brick1","cactus"];
+    		return t[Math.floor(Math.random()*t.length)];
+	    }
 		Test.assert(this.config.tiles[x], "config should have enough tiles x");
 		Test.assert(this.config.tiles[x][y], "tile should exist");
 		Test.assert(typeof this.config.tiles[x][y], "tiles should only contain strings (name of tiles)");

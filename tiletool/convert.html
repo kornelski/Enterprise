@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<style type="text/css">
+    body {background:red}
+</style>
+
+<canvas id=canvas width=640 height=180></canvas>
+<canvas id=dstcanvas width=640 height=180></canvas>
+<img id=dstimg>
+<script>
+var width = 50, height = 26;
+var canvas = document.getElementById('canvas');
+var dstcanvas = document.getElementById('dstcanvas');
+var dstimg = document.getElementById('dstimg');
+var tile = new Image(); tile.src = 'tiles.png';
+var mask = new Image(); mask.src = 'mask.png';
+var ctx = canvas.getContext('2d');
+var dst = dstcanvas.getContext('2d');
+
+function blitFromTo(sx,sy,dx,dy) {
+    ctx.globalCompositeOperation = 'source-over';
+    var odd = sx&1;
+    
+    ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+    ctx.drawImage(tile,-sx*width/2,-sy*height + (odd ? -height/2 : 0));
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.drawImage(mask,0,0);
+    
+    dst.drawImage(canvas,0,0,width,height,dx*width,dy*height,width,height);
+}
+
+window.onload = function(){
+    dstcanvas.width = tile.width*2;
+    dstcanvas.height = tile.height*2;
+    
+    var tileperrow = tile.width/width*2;
+    var rows = tile.height/height*2;
+
+    for(var y=0; y < rows; y++)
+    for(var x=0; x < tileperrow; x++)
+    {
+        blitFromTo(x,y,x,y);
+    }
+    dstimg.src = dstcanvas.toDataURL();
+    canvas.parentNode.removeChild(canvas);
+    dstcanvas.parentNode.removeChild(dstcanvas);
+}
+</script>
