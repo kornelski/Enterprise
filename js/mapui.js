@@ -60,8 +60,8 @@ MapUI.prototype = {
     
     cellToScreen: function(cellx, celly) {
         return {
-            x: (cellx - celly)*this.tile.width/2, 
-            y: (cellx + celly)*this.tile.height
+            x: Math.round((cellx - celly)*this.tile.width/2), 
+            y: Math.round((cellx + celly)*this.tile.height)
         };
     },
     
@@ -74,11 +74,21 @@ MapUI.prototype = {
         // if (cell.x==selectedtile.x && cell.y==selectedtile.y) {
         //     extra = 10;
         // }
+        var anim = this.framenumber;
+		
+		if (this.map.getTile(cell).name == 'water')
+		{
+            return (                 
+                Math.sin((anim/10.1)+cell.x/2)*9* Math.sin((anim/9.1)+cell.y/1.3) - 
+                Math.sin((anim/4.2)+cell.y/3)*7 -
+                Math.sin((anim/11)+cell.y/17)*5 -
+                Math.sin((anim/6)-cell.x/11)*3) - 10;
+        }		
         var anim = this.crazylevel > 0.01 ? this.framenumber : 0;
 		
-        return this.crazylevel * (                 
-            Math.sin((anim/10)+cell.x/5)*20 - 
-            Math.sin((anim/12)+cell.y/3)*20 -
+        return this.crazylevel * (30+                 
+            Math.sin((anim/10)+cell.x/5)*15 - 
+            Math.sin((anim/12)+cell.y/3)*15 -
             Math.sin((anim/2)+cell.y/10)*2 -
             Math.sin((anim/2)+cell.x/20)*3);
     },
@@ -93,7 +103,8 @@ MapUI.prototype = {
         this.scroll.x += this.scrollSpeed.x;
         this.scroll.y += this.scrollSpeed.y;        
         
-        this.context.clearRect(0,0,this.width,this.height);
+        this.context.fillStyle = '#14b'
+        this.context.fillRect(0,0,this.width,this.height);
 //        this.context.setTransform(1,0,1,0,0,0);
     
         Test.assert(this.tile.width>0,"loop must end");
@@ -129,11 +140,11 @@ MapUI.prototype = {
                 var img = this.map.getTile(cell).img;
                 var elevation = this.elevationForCell(cell);
                                 
-                this.context.globalAlpha = 1.0;
+                this.context.globalAlpha = 10.0/(10.0+Math.max(0,-elevation));
                 this.context.drawImage(img, 
-                    x - Math.floor(img.width/2), 
-                    y - img.height + Math.floor(this.tile.height/2)                     
-                    - elevation
+                    Math.floor(x - Math.floor(img.width/2)), 
+                    Math.floor(y - img.height + Math.floor(this.tile.height/2)                     
+                    - elevation)
                     );
                 
                 x += this.tile.width;
@@ -176,15 +187,16 @@ MapUI.prototype = {
 
             if (pos.y > maxY) break;
             
-            var elevation = this.elevationForCell(o.origin);
+            var cell = {x:Math.round(o.origin.x),y:Math.round(o.origin.y)}
+            var elevation = this.elevationForCell(cell);
 			Test.assert(model.img, "should have an image");
 			
 			// show selected characters
 			if (this.game.isSelected(o)) {
 			    var s = this.selectionImage;
     			this.context.drawImage(s,
-    				pos.x - s.width/2,
-    				pos.y - elevation - s.height 
+    				Math.floor(pos.x - s.width/2),
+    				Math.floor(pos.y - elevation - s.height)
     			);
 			}	            
 			
@@ -192,8 +204,8 @@ MapUI.prototype = {
             this.context.globalAlpha = o.opacity;
 			this.context.drawImage(model.img,
 				model.width*model.currentSprite, 0, model.width, model.height,
-				pos.x - model.width/2,
-				pos.y - elevation - model.height, 
+				Math.floor(pos.x - model.width/2),
+				Math.floor(pos.y - elevation - model.height), 
 				model.width, model.height
 			);
        }    

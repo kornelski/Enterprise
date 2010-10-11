@@ -30,6 +30,7 @@ Tile.get = function(name){
 	// preload that image
 	// tofix: load queue
 	tile.img = new Image();
+	tile.name = name;
 	tile.img.src = data.src;
 	tile.collides = data.collides;
 	

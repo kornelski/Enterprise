@@ -1,4 +1,5 @@
 
+
 function UI(game,$container) {
     var self=this;
 
@@ -79,8 +80,10 @@ function UI(game,$container) {
     });
     
     setInterval(function(){
+        if (!game.paused) {
 		self.renderFrame();
 		game.frame();
+	    }
 	},50);
 }
 

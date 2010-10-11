@@ -2,7 +2,7 @@
 
 function Game() {
 	// the game starts at level 1 - 1
-	this.map = Map.get("first");
+	this.map = Map.get(window.location.hash.length>4 ? "random" : "first");
 	var objects = this.map.objects;
 	for (var i=0; i<objects.length; ++i) {
 		var obj = objects[i];

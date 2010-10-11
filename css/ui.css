@@ -86,9 +86,12 @@ div.character {
 	
 	-webkit-transition: all 0.5s linear;
 	-moz-transition: all 0.5s linear;
+	-o-transition: all 0.5s linear;
+	transition: all 0.5s linear;
 	
 	-webkit-border-radius: 10px 0 / 10px 0;
 	-moz-border-radius: 10px 0 / 10px 0;
+	border-radius: 10px 0 / 10px 0;
 	
 	
 }
@@ -96,9 +99,13 @@ div.character.selected {
 	border: 2px solid #3fa;
 	color: rgba(0, 255, 100, 0.8);
 	-webkit-box-shadow: inset 0 0 5px white;
+	-moz-box-shadow: inset 0 0 5px white;
+	box-shadow: inset 0 0 5px white;
 
 	-webkit-transform: rotate(3deg);
 	-moz-transform: rotate(3deg);
+	-o-transform: rotate(3deg);
+	transform: rotate(3deg);
 	  
 }
 
@@ -138,15 +145,19 @@ div.character div.progress {
 	left: 1px;
 }
 
-label {
+label, a {
 	color: white; text-shadow: 1px 1px 0 black;
     background: rgba(100,200,255,0.4);
 }
+a {color:#8ff}
+a:hover {color:#0ff}
 
 #hud-map {
 	position: absolute;
 	-webkit-transform: rotate(-2deg);
 	-moz-transform: rotate(-2deg);
+	-o-transform: rotate(-2deg);
+	transform: rotate(-2deg);
 	opacity:0.5;
 	top: 600px;
 	left: 16px;

@@ -18,10 +18,7 @@ var Hud = function(){
 	});
 
 	$('#moreCowbell').click(function(){
-        self.game.addPlayer(new Player());
-        self.game.addPlayer(new Player());
-        self.game.addPlayer(new Player());
-        self.game.addPlayer(new Player());
+	    self.game.paused = !self.game.paused;
 	});
 	
 	$('#toggleAll').click(function(){
