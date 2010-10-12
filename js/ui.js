@@ -22,6 +22,29 @@ function UI(game, $container) {
         }
     });
 
+
+    var lastTouchPageX,lastTouchPageY;
+    this.mapCanvas[0].addEventListener('touchstart',function(e){
+        if (e.touches.length==1) {
+            lastTouchPageX = e.touches[0].pageX;
+            lastTouchPageY = e.touches[0].pageY;
+        } else {
+            var cell = self.mapUI.screenToCell(e.touches[0].clientX + self.mapUI.scroll.x,e.touches[0].clientY + self.mapUI.scroll.y)
+            game.fire(cell);
+        }
+
+    },false);
+
+    this.mapCanvas[0].addEventListener('touchmove',function(e){
+        if (e.touches.length==1) {
+            self.mapUI.scroll.x += lastTouchPageX - e.touches[0].pageX;
+            self.mapUI.scroll.y += lastTouchPageY - e.touches[0].pageY;
+            lastTouchPageX = e.touches[0].pageX;
+            lastTouchPageY = e.touches[0].pageY;
+        }
+        e.preventDefault();
+    },false);
+
     this.mapCanvas[0].tabindex=0;
     this.mapCanvas.focus();
 
