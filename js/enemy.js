@@ -10,7 +10,7 @@ var Enemy = function(x,y,config) {
 
 	// copy all properties from the config to this object
 	// will fill in the api from the prototype
-	$.extend(this, config);
+	$.extend(this,config);
 
 	// TOFIX: ugly hack. should probably get its own model eventually
 	if (this.enemyType == 'sentry') this.model.src = 'img/characters/enemy-sentry.png';
@@ -125,24 +125,24 @@ Enemy.prototype = $.extend(new GameObj,{
 	},
 
 	state: null, // movement state
-  walkingSpeed: Config.enemyBaseWalkSpeed,
-  walkDestination: null,
+    walkingSpeed: Config.enemyBaseWalkSpeed,
+    walkDestination: null,
 
 	health: 100, // specific enemies may have more or fewer hp :)
 
-  frame: function() {
-      if ('walking' == this.state) {
+    frame: function() {
+        if ('walking' == this.state) {
 
-          if (Math.abs(this.origin.x - this.walkDestination.x) <= this.walkingSpeed &&
-              Math.abs(this.origin.y - this.walkDestination.y) <= this.walkingSpeed) {
-                  this.state = null;
-                  this.velocity={x:0,y:0}
+            if (Math.abs(this.origin.x - this.walkDestination.x) <= this.walkingSpeed &&
+                Math.abs(this.origin.y - this.walkDestination.y) <= this.walkingSpeed) {
+                    this.state = null;
+                    this.velocity={x:0,y:0}
                   this.model.stopAnimator();
-          } else {
-              this.velocity = vector(this.origin,this.walkDestination,this.walkingSpeed);
-          }
-      }
-  },
+            } else {
+                this.velocity = vector(this.origin,this.walkDestination,this.walkingSpeed);
+            }
+        }
+    },
 
 	collision: function(obj){
 		if (obj instanceof Player) {
@@ -152,9 +152,9 @@ Enemy.prototype = $.extend(new GameObj,{
 
 	walkTo: function(point){
 	    if (this.state != 'walking') {
-	      this.state = 'walking';
+	        this.state = 'walking';
 				this.model.switchAnimator('walk');
-      }
+        }
 	    this.walkDestination = {x:point.x,y:point.y}
 	},
 

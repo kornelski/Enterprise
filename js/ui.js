@@ -1,6 +1,6 @@
 
 
-function UI(game, $container) {
+function UI(game,$container) {
     var self=this;
 
     this.mapCanvas = $container.find('#map');
@@ -21,7 +21,6 @@ function UI(game, $container) {
             self.mapUI.scroll.y -= e.originalEvent.wheelDeltaY;
         }
     });
-
 
     var lastTouchPageX,lastTouchPageY;
     this.mapCanvas[0].addEventListener('touchstart',function(e){

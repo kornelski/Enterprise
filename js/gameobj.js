@@ -6,9 +6,9 @@ var GameObj = function() {
 
 	// read-only. use setOrigin
 	// (why is this read only?)
-  this.origin = {x:0,y:0};
+    this.origin = {x:0,y:0};
   // should the velocity be read-only as well?
-  this.velocity = {x:0,y:0};
+    this.velocity = {x:0,y:0};
   // and the friction...?
   this.friction = {x:0,y:0};
 }
@@ -35,7 +35,7 @@ GameObj.prototype = {
 
 	collision: function(obj) {
 		// when this object collides with another object
-  	},
+    },
 
 	damage: function(dmg){
 		Test.assert(typeof dmg == 'number', "damage should be a number");
@@ -50,27 +50,27 @@ GameObj.prototype = {
 	},
 
 	frame: function() {
-		// game logic per frame
+	    // game logic per frame
 		// subclasses overrides it
-	},
+    },
 
-	setOrigin: function(x,y) {
+    setOrigin: function(x,y) {
 		if (typeof x == 'object') { // if object, assume {x:x,y:y}
 			Test.assert(arguments.length == 1, "why two arguments if the first is an object?");
 			this.origin.x = x.x;
 			this.origin.y = x.y;
 		} else {
 			Test.assert(typeof x == 'number' && typeof y == 'number', "parameter type fail");
-			this.origin.x=x;
-			this.origin.y=y;
+        this.origin.x=x;
+		this.origin.y=y;
 		}
 		this.screenZIndex = this.origin.x + this.origin.y; // FIXME: mark objects as dirty for re-sort?
-	},
+    },
 
-	setModel: function(name) {
-		this.model = new Model(Models[name]);
+    setModel: function(name) {
+        this.model = new Model(Models[name]);
 		this.preload(); // now cache and set image
-	},
+    },
 
 	// cache sprite from model
 	// sets this.model.img to the sprite
