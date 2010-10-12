@@ -23,6 +23,12 @@ html, body {
 	right: 0;
 	bottom: 0;
 	overflow: hidden;
+
+	user-select: none;
+	-o-user-select:none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
 }
 
 #map {
@@ -83,11 +89,6 @@ div.character {
 	z-index: 1;
 	cursor: default;
 	color:rgba(255,200,10,0.5);
-	user-select: none;
-	-o-user-select:none;
-	-moz-user-select: none;
-	-khtml-user-select: none;
-	-webkit-user-select: none;
 
 	-webkit-transition: all 0.5s linear;
 	-moz-transition: all 0.5s linear;
