@@ -200,10 +200,17 @@ MapUI.prototype = {
     			);
 			}
 
+            if (!model.img.width) continue;
+
             // draw the correct sprite at the screen
             this.context.globalAlpha = o.opacity;
+            Test.assert(model.img,"model must have an image");
+            Test.assert(model.img.width,"model must be loaded");
+            Test.assert(model.currentSprite>=0,"sprite >= 0");
+            Test.assert(model.currentSprite>=0,"sprite >= 0");
 			this.context.drawImage(model.img,
-				model.width*model.currentSprite, 0, model.width, model.height,
+				model.width*model.currentSprite, 0,
+				model.width, model.height,
 				Math.floor(pos.x - model.width/2),
 				Math.floor(pos.y - elevation - model.height),
 				model.width, model.height
