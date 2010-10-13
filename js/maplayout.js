@@ -14,21 +14,21 @@ var MapLayout = function(config){
 	Test.assert(config.width > 0, "Every map should have a width");
 	Test.assert(config.height > 0, "Every map should have a height");
 	Test.assert(config.name == "random" || (config.tiles && config.tiles instanceof Array), "Every map should have a set of tiles");
-	
+
 	this.config = config;
 };
 
 MapLayout.prototype = {
-	
+
 	// return the value of a property
 	get: function(name){
 		Test.assert(name in this.config, "The requested property should exist");
 		return this.config[name];
 	},
-	
+
 	// return the name of the tile at given coordinate
 	getTileName: function(x,y){
-	    
+
 	    if (!this.config.tiles) {
 		    // return a random tile, for now
     		// TOFIX: remove when edwin finishes
@@ -49,7 +49,7 @@ MapLayout.prototype = {
 		Test.assert(typeof this.config.tiles[x][y], "tiles should only contain strings (name of tiles)");
 		return this.config.tiles[x][y];
 	},
-	
+
 	toString: function(){
 		return "MapLayout["+this.config.name+" (etc)]";
 	},

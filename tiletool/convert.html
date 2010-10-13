@@ -19,19 +19,19 @@ var dst = dstcanvas.getContext('2d');
 function blitFromTo(sx,sy,dx,dy) {
     ctx.globalCompositeOperation = 'source-over';
     var odd = sx&1;
-    
+
     ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
     ctx.drawImage(tile,-sx*width/2,-sy*height + (odd ? -height/2 : 0));
     ctx.globalCompositeOperation = 'destination-out';
     ctx.drawImage(mask,0,0);
-    
+
     dst.drawImage(canvas,0,0,width,height,dx*width,dy*height,width,height);
 }
 
 window.onload = function(){
     dstcanvas.width = tile.width*2;
     dstcanvas.height = tile.height*2;
-    
+
     var tileperrow = tile.width/width*2;
     var rows = tile.height/height*2;
 

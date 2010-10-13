@@ -5,9 +5,9 @@ var Enemy = function(x,y,config) {
     GameObj.call(this);
 	this.setModel('player');
 	this.setOrigin(x,y);
-    
-    this.walkingSpeed = Config.enemyBaseWalkSpeed + Config.enemyBaseWalkSpeed*Math.random();  
-	
+
+    this.walkingSpeed = Config.enemyBaseWalkSpeed + Config.enemyBaseWalkSpeed*Math.random();
+
 	// copy all properties from the config to this object
 	// will fill in the api from the prototype
 	$.extend(this, config);
@@ -29,7 +29,7 @@ Enemy.prototype = $.extend(new GameObj,{
 	currentWaypoint: 0, // for patrol, an index on waypoints array while on patrol.
 	minimalDistance: 10, // distance before going agro
 	cooldownTime: 3000, // agro cooldown period
-	
+
     // do something magical.
 	// basically, enemies are either on sentry duty (meaning they dont walk)
 	// or they are on patrol duty (meaning they'll walk to certain waypoints)
@@ -49,17 +49,17 @@ Enemy.prototype = $.extend(new GameObj,{
 				// skip regular duty. the next if will start agressive mode
 			} else {
 				// do normal duty
-				
+
 				// now do stuff for specific enemy types
 				if (this.enemyType == 'patrol') {
 					// walk to target waypoint
-					
+
 					if (vector(this.waypoints[this.currentWaypoint], this.origin).length < 1) {
 						this.currentWaypoint = (this.currentWaypoint + 1) % this.waypoints.length; // next waypoint
 					}
 					// move to that waypoint
 					this.walkTo(this.waypoints[this.currentWaypoint]);
-					
+
 				} else if (this.enemyType == 'sentry') {
 					// maybe turn around? make sure you're near your sentry position
 					if (vector(this.waypoints[0], this.origin).length > 1) this.walkTo(this.waypoints[0]);
@@ -69,13 +69,13 @@ Enemy.prototype = $.extend(new GameObj,{
 					// since you've updated the target (in case you get stuck) or when no target
 					// is known (init)
 					var now = (Date.now ? Date.now() : +new Date);
-					if (!this.lastKnownClosestPlayerLocation || 
+					if (!this.lastKnownClosestPlayerLocation ||
 						vector(this.lastKnownClosestPlayerLocation, this.origin).length < 1 ||
 						now - this.lastKnownPositionTime > 5000
 					) {
 						// create a new target, randomly 5 cells from current position
 						this.lastKnownClosestPlayerLocation = {
-							x:this.origin.x + (Math.random() * 10) - 5, 
+							x:this.origin.x + (Math.random() * 10) - 5,
 							y:this.origin.y + (Math.random() * 10) - 5
 						};
 						this.lastKnownPositionTime = now;
@@ -109,7 +109,7 @@ Enemy.prototype = $.extend(new GameObj,{
 			}
 		}
 	},
-	
+
 	// returns the distance and player that's closest to this enemy
 	closestPlayer: function(game){
 		var min = Infinity;
@@ -127,9 +127,9 @@ Enemy.prototype = $.extend(new GameObj,{
 	state: null, // movement state
   walkingSpeed: Config.enemyBaseWalkSpeed,
   walkDestination: null,
-    
+
 	health: 100, // specific enemies may have more or fewer hp :)
-	
+
   frame: function() {
       if ('walking' == this.state) {
 
@@ -143,13 +143,13 @@ Enemy.prototype = $.extend(new GameObj,{
           }
       }
   },
-	
+
 	collision: function(obj){
 		if (obj instanceof Player) {
 			if (obj.health > 0) obj.damage(0.5); // cant hit dead people
 		}
 	},
-    
+
 	walkTo: function(point){
 	    if (this.state != 'walking') {
 	      this.state = 'walking';
@@ -157,7 +157,7 @@ Enemy.prototype = $.extend(new GameObj,{
       }
 	    this.walkDestination = {x:point.x,y:point.y}
 	},
-	
+
 	fire: function(point) {
 	    var rocket = new Rocket();
 	    rocket.setOrigin(this.origin.x,this.origin.y);

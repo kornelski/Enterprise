@@ -2,7 +2,7 @@
 // the object should be replaced by a json containing
 // one object for every tile that contains the meta
 // data for that object, keyed by its (unique) name.
-// replacement is done for fast access. 
+// replacement is done for fast access.
 
 // API:
 // object(
@@ -52,7 +52,7 @@ var Tiles = {
 		src: 'img/tiles/tile31.png',
 		collides: true
 	},
-	
+
 	"grass": {
 		src: 'img/tiles/grass.png'
 	},
@@ -71,7 +71,7 @@ var Tiles = {
 	},
 	"tree": {
 		src: 'img/tiles/tree.png',
-		collides: false 
+		collides: false
 	},
 	"blood": {
 		src: 'img/tiles/blood.png'
@@ -117,5 +117,5 @@ var Tiles = {
 		src: 'img/tiles/cactus.png',
 		collides: true
 	}
-	
+
 };

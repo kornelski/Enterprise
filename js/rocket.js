@@ -7,7 +7,7 @@ var Rocket = function() {
 Rocket.prototype = $.extend(new GameObj,{
 
   ttl: 100, // if the rocket doesn't explode within this time, knife it
-  
+
   frame: function() {
     this.ttl--;
     if (!this.ttl) {
@@ -23,11 +23,11 @@ Rocket.prototype = $.extend(new GameObj,{
       );
     }
   },
-  
+
   collision: function() {
       this.explode();
   },
-  
+
   explode: function() {
     for(var i=0; i < 10; i++) {
       var velocity = {x:this.velocity.x/4+Math.random()*1, y:this.velocity.y/4+Math.random()*1};
@@ -42,5 +42,5 @@ Rocket.prototype = $.extend(new GameObj,{
     // remove the rocket. only particles are left now
     this.game.removeObject(this);
   },
-    
+
 0:0});
