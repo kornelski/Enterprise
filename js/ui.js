@@ -107,11 +107,14 @@ function UI(game,$container) {
     });
 
     setInterval(function(){
-        if (!game.paused) {
+        if (!game.paused) try {
 			game.frame(); // process game logic first
 			self.renderFrame(); // show new state (if any)
 			hud.frame(); // update hud
-	    }
+	    } catch(e) {
+	        game.paused = true;
+	        throw e;
+        }
 	},50);
 }
 
