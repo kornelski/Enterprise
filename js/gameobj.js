@@ -14,8 +14,8 @@ var GameObj = function() {
 }
 
 GameObj.prototype = {
-  game: null, // reference to governing game
-  screenZIndex: 0, // this is perf trick, see Game.objects
+	game: null, // reference to governing game
+	screenZIndex: 0, // this is perf trick, see Game.objects
 	
 	origin: null, // position of this object
 	velocity: null, // speed of this object
@@ -31,30 +31,59 @@ GameObj.prototype = {
 	
 	ttl: 0, // time until the object should disappear
 	
+	health: 0, // amount of damage this object can absorbs before it "dies"
+	
 	collision: function(obj) {
 		// when this object collides with another object
-  },
+  	},
+
+	damage: function(dmg){
+		Test.assert(typeof dmg == 'number', "damage should be a number");
+		Test.assert(dmg >= 0, "i guess there's no such thing as negative damage?");
+		// when something damages this object, this method is called with the amount of damage dealt
+		this.health -= dmg;
+		if (this.health <= 0) this.die();
+	},
+	
+	die: function(){
+		// when the hitpoints run out due to some event
+	},
 	
 	frame: function() {
-    // game logic per frame
-    // subclasses overrides it	    
-  },
+		// game logic per frame
+		// subclasses overrides it	    
+	},
 	
-  setOrigin: function(x,y) {
-  	if (typeof x == 'object') { // if object, assume {x:x,y:y}
-  		Test.assert(arguments.length == 1, "why two arguments if the first is an object?");
-  		this.origin.x = x.x;
-  		this.origin.y = x.y;
-  	} else {
-  		Test.assert(typeof x == 'number' && typeof y == 'number', "parameter type fail");
-	    this.origin.x=x;
+	setOrigin: function(x,y) {
+		if (typeof x == 'object') { // if object, assume {x:x,y:y}
+			Test.assert(arguments.length == 1, "why two arguments if the first is an object?");
+			this.origin.x = x.x;
+			this.origin.y = x.y;
+		} else {
+			Test.assert(typeof x == 'number' && typeof y == 'number', "parameter type fail");
+			this.origin.x=x;
 			this.origin.y=y;
 		}
-    this.screenZIndex = this.origin.x + this.origin.y; // FIXME: mark objects as dirty for re-sort?
-  },
+		this.screenZIndex = this.origin.x + this.origin.y; // FIXME: mark objects as dirty for re-sort?
+	},
  
-  setModel: function(name) {
+	setModel: function(name) {
 		this.model = new Model(Models[name]);
-  },
+		this.preload(); // now cache and set image
+	},
+
+	// cache sprite from model
+	// sets this.model.img to the sprite
+	preload: function(){
+		Test.assert(this.model, 'dont preload if no model is set');
+		Test.assert(this.model.src, "every model needs a sprite");
+		if (this.model.src in this.imgCache) {
+			this.model.img = this.imgCache[this.model.src];
+		} else {
+			var img = this.model.img = this.imgCache[this.model.src] = new Image;
+			Test.assert(this.imgCache[this.model.src], "an image should exist now");
+			img.src = this.model.src;
+		}
+	},
 	
 0:0}

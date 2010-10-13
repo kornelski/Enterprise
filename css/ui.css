@@ -44,6 +44,11 @@ html, body {
 	background: black url(../img/hud.jpg) no-repeat 50% 0;
 }
 
+#coord {
+	background-color: black;
+	font-size: 11px;	
+}
+
 .characters {padding:10px 0 70px;overflow:hidden}
 
 #toggleAll {

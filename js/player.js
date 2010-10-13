@@ -13,6 +13,8 @@ Player.prototype = $.extend(new GameObj,{
     id: null, // id of this player (tied to hud), 1-4
     flag: null, // flag for this player for selection, 1,2,4,8
     
+	health: 100,
+	
 	state: null, // movement state
     walkingSpeed: Config.playerWalkSpeed,
     walkDestination: null,
@@ -24,7 +26,7 @@ Player.prototype = $.extend(new GameObj,{
                 Math.abs(this.origin.y - this.walkDestination.y) <= this.walkingSpeed) {
                     this.state = null;
                     this.velocity={x:0,y:0}
-                    this.model.stopAnimation();
+                    this.model.stopAnimator();
             } else {
             
                 this.velocity = vector(this.origin,this.walkDestination,this.walkingSpeed);
@@ -36,9 +38,18 @@ Player.prototype = $.extend(new GameObj,{
 	    if (this.state != 'walking') {
 	        this.state = 'walking';
 			//console.log("switching to walking");
-			this.model.switchAnimation('walk');
+			this.model.switchAnimator('walk');
         }
 	    this.walkDestination = {x:point.x,y:point.y}
+	},
+	
+	damage: function(dmg){
+		this.health -= dmg;
+		if (this.health <= 0) this.die();
+	},
+	
+	die: function(){
+		this.model.switchAnimator('death');
 	},
 	
 	fire: function(point) {

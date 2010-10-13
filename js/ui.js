@@ -1,6 +1,6 @@
 
 
-function UI(game,$container) {
+function UI(game, $container) {
     var self=this;
 
     this.mapCanvas = $container.find('#map');
@@ -35,6 +35,11 @@ function UI(game,$container) {
 		    game.walkPlayers(cell);
 	    }
 		return false;
+	});
+	
+	this.mapCanvas.mousemove(function(e){
+		var cell = self.mapUI.screenToCell(self.mapUI.mouse.x + self.mapUI.scroll.x,self.mapUI.mouse.y + self.mapUI.scroll.y)
+		$('#coord').html(cell.x.toPrecision(4)+" x "+cell.y.toPrecision(4));
 	});
 	
 	this.mapCanvas[0].oncontextmenu = function(){return false}
@@ -81,8 +86,9 @@ function UI(game,$container) {
     
     setInterval(function(){
         if (!game.paused) {
-		self.renderFrame();
-		game.frame();
+			game.frame(); // process game logic first
+			self.renderFrame(); // show new state (if any)
+			hud.frame(); // update hud
 	    }
 	},50);
 }

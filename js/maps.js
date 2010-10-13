@@ -69,24 +69,24 @@ var Maps = {
 	        [23,23,23,23,23,23,23,23,31,23,23,23,18,23,23,18,18,18,18,18,18,18,18,18,18,18,22,18,18,22,22,22,22,22,22,18,18,22,22,18,22,18,10,18,10,10,10,18,18,18,18,18,23,23,23,23,23,23,23,23,23,23,17,17,23,23,23,23,23,23,23,23,17,17,17,17,17,17,17,17],
 	        [23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,18,18,18,18,18,18,18,18,22,22,22,22,22,22,22,22,22,22,22,22,18,22,22,18,18,18,10,10,10,10,10,10,18,18,18,18,18,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,17,17,17,17,17,17,17,17]
         ],
-		spawnPoint: {x:20, y:15}, // this is where player starts
+		spawnPoint: {x:28, y:24}, // this is where player starts
 		squadSize: 3, // number of characters you start with (1-4)        
 		gameObjs: [
 			//{type: 'enemy', x:22, y:12},
-			{type: 'enemy', x:35, y:40, config:{
+			{type: 'enemy', x:45, y:40, config:{
 				enemyType:'sentry',
 				enemyState:'normal',
-				waypoints:[{x:20,y:40}, {x:20,y:20}, {x:35,y:20}, {x:35,y:40}]
+				waypoints:[{x:30,y:40}]
 			}},
 			{type: 'enemy', x:10, y:6, config:{
 				enemyType:'sentry',
 				enemyState:'normal',
 				waypoints:[{x:20,y:7}]
 			}},
-			{type: 'enemy', x:11, y:7, config:{
+			{type: 'enemy', x:3, y:4, config:{
 				enemyType:'patrol',
 				enemyState:'normal',
-				waypoints:[{x:20,y:8}, {x:10,y:10}]
+				waypoints:[{x:15,y:6	}, {x:18,y:18}, {x:3,y:19}, {x:3,y:4}]
 			}},
 			{type: 'enemy', x:5, y:7, config:{
 				enemyType:'random',

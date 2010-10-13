@@ -11,3 +11,6 @@ function vector(a,b,length) {
     vect.y = vect.y/fulllength * length;
     return vect;
 }
+vector.distance = function(a,b){
+	return vector(a,b).length;
+};

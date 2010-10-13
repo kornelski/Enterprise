@@ -1,44 +1,45 @@
+// models contain meta data for objects
+// namely, they contain animators and sprite data
 
 var Model = function(spriteState) {
-    
-    if (!spriteState.img) {
-        spriteState.img = new Image();
-        spriteState.img.src = spriteState.src;
-    }
-    
-    // just copy properties from the sprite (uses it as a prototype)
-	// see models.js for exact properties being copied
-    for(prop in spriteState) {
-        this[prop] = spriteState[prop];
-    }
-    
-    Test.assert(this.img, "must have img");
-}
+	Test.assert(spriteState.src, "the model should have a sprite");
+	
+	$.extend(this, spriteState);
+};
 
 Model.prototype = {
-    
-    stopAnimation: function() {
-        if (!this.currentAnimation) return;
+	src: null, // set from json ("spriteState")
+    img: null, // set from gameObj.prototype.preload, using src
+	
+	animators: null, // an array with animators
+	currentAnimator: null, // the current playing animator, if any
+	currentSprite: null, // sprite index
+	lastAnimator: null, // last time animator was called
+	width: 0, // size of each sprite
+	height: 0,
+
+    stopAnimator: function() {
+        if (!this.currentAnimator) return;
         
-        Test.assert(this.currentAnimation in this.animations,this.currentAnimation+" missing?");
-        Test.assert('function' == typeof this.animations[this.currentAnimation],"anim == function");
+        Test.assert(this.currentAnimator in this.animators,this.currentAnimator+" missing?");
+        Test.assert('function' == typeof this.animators[this.currentAnimator],"anim == function");
         
-        this.animations[this.currentAnimation].call(this, 'stop');
-        this.currentAnimation=null;
+        this.animators[this.currentAnimator].call(this, 'stop');
+        this.currentAnimator = null;
     },
 
-    playAnimation: function(name) {
-        Test.assert(name in this.animations,name+" missing?");
-        Test.assert('function' == typeof this.animations[name],"anim == function (for "+name+")");
+    playAnimator: function(name) {
+        Test.assert(name in this.animators,name+" missing?");
+        Test.assert('function' == typeof this.animators[name],"anim == function (for "+name+")");
         
-        this.currentAnimation = name;
-        this.animations[name].call(this, 'init');
+        this.currentAnimator = name;
+        this.animators[name].call(this, 'init');
     },
 	
-	switchAnimation: function(name){
+	switchAnimator: function(name){
 		Test.assert(name, "we need an animator");
-		if (this.currentAnimation && this.currentAnimation != name) this.stopAnimation();
-		if (this.currentAnimation != name) this.playAnimation(name);
+		if (this.currentAnimator && this.currentAnimator != name) this.stopAnimator();
+		if (this.currentAnimator != name) this.playAnimator(name);
 	},
 
 	toString: function(){

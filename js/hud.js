@@ -33,8 +33,13 @@ var Hud = function(){
 			if ((self.game.selectedCharacter & 8) == 0) $chars.filter(':nth-child(4)').click();
 		} 
 	});
+
+	this.lastHealth = [0,0,0,0];
 };
 Hud.prototype = {
+	lastHealth: null, // players health at last update (prevents useless paints)
+	
+	game: null, // a hook to the active game
 
 	setGame: function(game){
 		this.game = game;
@@ -50,4 +55,18 @@ Hud.prototype = {
 		$('#c'+(c+1)+'-progress').width(s * 0.76);
 	},
 
-	0:0};
+	/**
+	 * Called on each frame to make updates to the hud.
+	 * Do take care, updating the hud on every frame is a serious performance issue.
+	 * Only update changed data, like health or stance
+	 */
+	frame: function(){
+		for (var i=0; i<4; ++i) {
+			if (this.game.players[i] && this.lastHealth[i] != this.game.players[i].health) {
+				this.lastHealth[i] = this.game.players[i].health;
+				$('#c'+(i+1)+'-status').html(this.game.players[i].health.toFixed(0)+'%');
+			}
+		}
+	},
+
+0:0};

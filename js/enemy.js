@@ -5,17 +5,20 @@ var Enemy = function(x,y,config) {
     GameObj.call(this);
 	this.setModel('player');
 	this.setOrigin(x,y);
-	// TOFIX: ugly hack
-	this.model.src = 'img/characters/enemy.png';
-    this.model.img = new Image();
-    this.model.img.src = this.model.src;
     
     this.walkingSpeed = Config.enemyBaseWalkSpeed + Config.enemyBaseWalkSpeed*Math.random();  
 	
 	// copy all properties from the config to this object
 	// will fill in the api from the prototype
-	$.extend(this,config);
-}
+	$.extend(this, config);
+
+	// TOFIX: ugly hack. should probably get its own model eventually
+	if (this.enemyType == 'sentry') this.model.src = 'img/characters/enemy-sentry.png';
+	else if (this.enemyType == 'patrol') this.model.src = 'img/characters/enemy-patrol.png';
+	else this.model.src = 'img/characters/enemy.png';
+
+	this.preload();
+};
 
 Enemy.prototype = $.extend(new GameObj,{
 	enemyType: null, // sentry, patrol, random
@@ -121,31 +124,37 @@ Enemy.prototype = $.extend(new GameObj,{
 		return {distance:min, player:player};
 	},
 
-
 	state: null, // movement state
-    walkingSpeed: Config.enemyBaseWalkSpeed,
-    walkDestination: null,
+  walkingSpeed: Config.enemyBaseWalkSpeed,
+  walkDestination: null,
     
-    frame: function() {
-        if ('walking' == this.state) {
+	health: 100, // specific enemies may have more or fewer hp :)
+	
+  frame: function() {
+      if ('walking' == this.state) {
 
-            if (Math.abs(this.origin.x - this.walkDestination.x) <= this.walkingSpeed &&
-                Math.abs(this.origin.y - this.walkDestination.y) <= this.walkingSpeed) {
-                    this.state = null;
-                    this.velocity={x:0,y:0}
-                    this.model.stopAnimation();
-            } else {
-            
-                this.velocity = vector(this.origin,this.walkDestination,this.walkingSpeed);
-            }
-        }
-    },
+          if (Math.abs(this.origin.x - this.walkDestination.x) <= this.walkingSpeed &&
+              Math.abs(this.origin.y - this.walkDestination.y) <= this.walkingSpeed) {
+                  this.state = null;
+                  this.velocity={x:0,y:0}
+                  this.model.stopAnimator();
+          } else {
+              this.velocity = vector(this.origin,this.walkDestination,this.walkingSpeed);
+          }
+      }
+  },
+	
+	collision: function(obj){
+		if (obj instanceof Player) {
+			if (obj.health > 0) obj.damage(0.5); // cant hit dead people
+		}
+	},
     
 	walkTo: function(point){
 	    if (this.state != 'walking') {
-	        this.state = 'walking';
-			this.model.switchAnimation('walk');
-        }
+	      this.state = 'walking';
+				this.model.switchAnimator('walk');
+      }
 	    this.walkDestination = {x:point.x,y:point.y}
 	},
 	

@@ -171,13 +171,13 @@ MapUI.prototype = {
 			Test.assert(model, "expecting the object to have a model");
 			Test.assert(model instanceof Model, "and it should be a model too");
 			// check whether an animation is currently going on
-			if (model.currentAnimation) {
-				// okay an animation is currently playing.
-				// the model should have an animation property with the same name
+			if (model.currentAnimator) {
+				// okay an animator is currently playing.
+				// the model should have an animator property with the same name
 				// its the callback for that animation
-				Test.assert(model.currentAnimation in model.animations, "the current animation should have a callback");
+				Test.assert(model.currentAnimator in model.animators, "the current animation should have an animator");
 				// so lets call it... back :)
-				model.animations[model.currentAnimation].call(model); // set context of call to the model
+				model.animators[model.currentAnimator].call(model); // set context of call to the model
             }
 			
 			// get screen position of this object
