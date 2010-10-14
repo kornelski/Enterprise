@@ -10,6 +10,7 @@ var Player = function(id) {
 }
 
 Player.prototype = $.extend(new GameObj,{
+	game: null, // set from Game.addObject
 	cls: 'Player',
     id: null, // id of this player (tied to hud), 1-4
     flag: null, // flag for this player for selection, 1,2,4,8
@@ -50,8 +51,12 @@ Player.prototype = $.extend(new GameObj,{
 	},
 
 	die: function(){
-		this.model.switchAnimator('death');
-		this.solid = false;
+		// add this object to trash. we wont use it anymore
+		// will be removed at the end of this frame
+		this.game.removeObject(this);
+		// replace by placeholder that doesnt do anything but the 
+		// death animation and painting the corpse afterwards
+		this.game.addObject(new Placeholder(this.origin, 'player', 'death'));
 	},
 
 	fire: function(point) {

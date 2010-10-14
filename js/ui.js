@@ -86,7 +86,7 @@ function UI(game,$container) {
             case 32:
                 var cell = self.mapUI.screenToCell(self.mapUI.mouse.x + self.mapUI.scroll.x,
                     self.mapUI.mouse.y + self.mapUI.scroll.y);
-                game.fire(cell);
+                	game.fire(cell);
                 break;
 
 			case 49: $('.character').filter(':nth-child(1)').click(); break; // 1
@@ -101,20 +101,24 @@ function UI(game,$container) {
 
     $(document.body).keyup(function(e){
         switch(e.keyCode) {
-            case 37: case 39: self.mapUI.scrollSpeed.x=0; break;
-            case 38: case 40: self.mapUI.scrollSpeed.y=0; break;
+            case 37: case 39: self.mapUI.scrollSpeed.x = 0; break;
+            case 38: case 40: self.mapUI.scrollSpeed.y = 0; break;
         }
     });
 
     setInterval(function(){
-        if (!game.paused) try {
+    	if (!game.crashTest) {
+    		game.crashTest = true; // false if last iteration caused a crash. i need stack trace :)
+
 			game.frame(); // process game logic first
 			self.renderFrame(); // show new state (if any)
 			hud.frame(); // update hud
-	    } catch(e) {
-	        game.paused = true;
-	        throw e;
-        }
+			
+			game.crashTest = false; // allow timer to fire next time	
+		} else if (!game.crashMessage) {
+			console.log("Paused game, something error happened");	
+			game.crashMessage = true;
+		}
 	},50);
 }
 

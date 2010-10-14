@@ -2,6 +2,7 @@
 // namely, they contain animators and sprite data
 
 var Model = function(spriteState) {
+	Test.assert(spriteState, "ehm, json please");
 	Test.assert(spriteState.src, "the model should have a sprite");
 
 	$.extend(this, spriteState);
@@ -15,7 +16,6 @@ Model.prototype = {
 	animators: null, // an array with animators
 	currentAnimator: null, // the current playing animator, if any
 	currentSprite: null, // sprite index
-	lastAnimator: null, // last time animator was called
 	width: 0, // size of each sprite
 	height: 0,
 

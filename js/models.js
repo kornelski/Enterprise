@@ -20,6 +20,11 @@ var Models = {
 					if (this.currentSprite >= 8) {
 						// last death scene animation. leave it at that
 						this.currentAnimator = false;
+						// animation finished callback (if set)
+						if (this.animationFinished) {
+							this.animationFinished();
+							this.animationFinished = null;	
+						}
 					}
 					this.lastAnimator = Date.now() || +new Date;
 				}

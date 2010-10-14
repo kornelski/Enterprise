@@ -15,7 +15,7 @@ var GameObj = function() {
 
 GameObj.prototype = {
 	cls: 'GameObj',
-	game: null, // reference to governing game
+	game: null, // reference to governing game, set from Game.addObject
 	screenZIndex: 0, // this is perf trick, see Game.objects
 
 	origin: null, // position of this object
@@ -69,6 +69,7 @@ GameObj.prototype = {
 	},
 
 	setModel: function(name) {
+		Test.assert(name in Models, "Model ["+name+"] does not exist...");
 		this.model = new Model(Models[name]);
 		this.preload(); // now cache and set image
 	},
@@ -87,4 +88,7 @@ GameObj.prototype = {
 		}
 	},
 
+	toString: function(){
+		return "GameObject["+this.cls+"]";
+	},
 0:0}

@@ -13,14 +13,12 @@ var Enemy = function(x,y,config) {
 	$.extend(this, config);
 
 	// TOFIX: ugly hack. should probably get its own model eventually
-	if (this.enemyType == 'sentry') this.model.src = 'img/characters/enemy-sentry.png';
-	else if (this.enemyType == 'patrol') this.model.src = 'img/characters/enemy-patrol.png';
-	else this.model.src = 'img/characters/enemy.png';
-
-	this.preload();
+	this.model.src = this.getSpriteSrc();
+	this.preload(); // actually get the image and set it to use for this obj
 };
 
 Enemy.prototype = $.extend(new GameObj,{
+	game: null, // set from Game.addObject
 	cls: 'Enemy',
 	enemyType: null, // sentry, patrol, random
 	enemyState: null, // normal, agressive
@@ -30,6 +28,8 @@ Enemy.prototype = $.extend(new GameObj,{
 	currentWaypoint: 0, // for patrol, an index on waypoints array while on patrol.
 	minimalDistance: 10, // distance before going agro
 	cooldownTime: 3000, // agro cooldown period
+	
+	attackPowerMelee: 0.5,
 	
     // do something magical.
 	// basically, enemies are either on sentry duty (meaning they dont walk)
@@ -147,15 +147,22 @@ Enemy.prototype = $.extend(new GameObj,{
 	
 	collision: function(obj){
 		if (obj instanceof Player) {
-			if (obj.health > 0) obj.damage(0.5); // cant hit dead people
+			// cant hit dead people
+			// cant walk into them either...
+			Test.assert(obj.health > 0, "you cant touch dead people");
+			obj.damage(this.attackPowerMelee); 
 		}
 	},
     
 	walkTo: function(point){
+		if (point.x < 0) point.x = 0;
+		if (point.y < 0) point.y = 0;
+		// TODO: other bounds :p
+		
 	    if (this.state != 'walking') {
-	      this.state = 'walking';
-				this.model.switchAnimator('walk');
-      }
+	    	this.state = 'walking';
+			this.model.switchAnimator('walk');
+      	}
 	    this.walkDestination = {x:point.x,y:point.y}
 	},
 	
@@ -172,8 +179,23 @@ Enemy.prototype = $.extend(new GameObj,{
 	},
 	
 	die: function(){
-		this.model.switchAnimator('death');
-		this.solid = false;
+		//this.model.switchAnimator('death');
+		//this.solid = false;
+		this.game.removeObject(this);
+		// replace by placeholder that doesnt do anything but the 
+		// death animation and painting the corpse afterwards
+		var p = new Placeholder(this.origin, 'player', 'death');
+		p.model.src = this.getSpriteSrc();
+		p.preload(); // actually get the image and set it to use for this obj
+		this.game.addObject(p);
+	},
+	
+	// get specific sprite for this type of enemy
+	getSpriteSrc: function(){
+		// TOFIX: ugly hack. should probably get its own model eventually
+		if (this.enemyType == 'sentry') return 'img/characters/enemy-sentry.png';
+		if (this.enemyType == 'patrol') return 'img/characters/enemy-patrol.png';
+		return 'img/characters/enemy.png';
 	},
 	
 0:0});
