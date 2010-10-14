@@ -10,6 +10,7 @@ var Player = function(id) {
 }
 
 Player.prototype = $.extend(new GameObj,{
+	cls: 'Player',
     id: null, // id of this player (tied to hud), 1-4
     flag: null, // flag for this player for selection, 1,2,4,8
     
@@ -50,6 +51,7 @@ Player.prototype = $.extend(new GameObj,{
 	
 	die: function(){
 		this.model.switchAnimator('death');
+		this.solid = false;
 	},
 	
 	fire: function(point) {

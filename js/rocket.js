@@ -24,8 +24,11 @@ Rocket.prototype = $.extend(new GameObj,{
     }
   },
   
-  collision: function() {
-      this.explode();
+  collision: function(o) {
+  	if (o && o instanceof Enemy) {
+		o.damage(20);
+	}
+    this.explode();
   },
   
   explode: function() {

@@ -6,7 +6,7 @@ var Enemy = function(x,y,config) {
 	this.setModel('player');
 	this.setOrigin(x,y);
     
-    this.walkingSpeed = Config.enemyBaseWalkSpeed + Config.enemyBaseWalkSpeed*Math.random();  
+  this.walkingSpeed = Config.enemyBaseWalkSpeed + Config.enemyBaseWalkSpeed*Math.random();  
 	
 	// copy all properties from the config to this object
 	// will fill in the api from the prototype
@@ -21,6 +21,7 @@ var Enemy = function(x,y,config) {
 };
 
 Enemy.prototype = $.extend(new GameObj,{
+	cls: 'Enemy',
 	enemyType: null, // sentry, patrol, random
 	enemyState: null, // normal, agressive
 	lastKnownClosestPlayerLocation: null, // whenever a player is close to this enemy it remembers the location and moves/fires to it
@@ -125,12 +126,12 @@ Enemy.prototype = $.extend(new GameObj,{
 	},
 
 	state: null, // movement state
-  walkingSpeed: Config.enemyBaseWalkSpeed,
-  walkDestination: null,
+	walkingSpeed: Config.enemyBaseWalkSpeed,
+	walkDestination: null,
     
 	health: 100, // specific enemies may have more or fewer hp :)
 	
-  frame: function() {
+	frame: function() {
       if ('walking' == this.state) {
 
           if (Math.abs(this.origin.x - this.walkDestination.x) <= this.walkingSpeed &&
@@ -165,4 +166,14 @@ Enemy.prototype = $.extend(new GameObj,{
 	    this.game.addObject(rocket);
     },
 
+	damage: function(dmg){
+		this.health -= dmg;
+		if (this.health <= 0) this.die();
+	},
+	
+	die: function(){
+		this.model.switchAnimator('death');
+		this.solid = false;
+	},
+	
 0:0});

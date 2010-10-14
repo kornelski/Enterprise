@@ -35,9 +35,11 @@ var Hud = function(){
 	});
 
 	this.lastHealth = [0,0,0,0];
+	this.lastSprite = [0,0,0,0];
 };
 Hud.prototype = {
 	lastHealth: null, // players health at last update (prevents useless paints)
+	lastSprite: null, // which sprite per was shown per character
 	
 	game: null, // a hook to the active game
 
@@ -62,9 +64,16 @@ Hud.prototype = {
 	 */
 	frame: function(){
 		for (var i=0; i<4; ++i) {
-			if (this.game.players[i] && this.lastHealth[i] != this.game.players[i].health) {
-				this.lastHealth[i] = this.game.players[i].health;
-				$('#c'+(i+1)+'-status').html(this.game.players[i].health.toFixed(0)+'%');
+			var p = this.game.players[i];
+			if (p) {
+				if (this.lastHealth[i] != p.health) {
+					this.lastHealth[i] = p.health;
+					$('#c'+(i+1)+'-status').html(p.health.toFixed(0)+'%');
+				}
+				if (this.lastSprite[i] != p.model.currentSprite) {
+					this.lastSprite[i] = p.model.currentSprite;
+					$('#c'+(i+1)+' > .img').css('background-position', (-(p.model.currentSprite * p.model.width)-12)+'px 0');
+				}
 			}
 		}
 	},

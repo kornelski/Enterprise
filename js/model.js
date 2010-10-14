@@ -8,6 +8,7 @@ var Model = function(spriteState) {
 };
 
 Model.prototype = {
+	cls: 'Model',
 	src: null, // set from json ("spriteState")
     img: null, // set from gameObj.prototype.preload, using src
 	

@@ -14,6 +14,7 @@ var GameObj = function() {
 }
 
 GameObj.prototype = {
+	cls: 'GameObj',
 	game: null, // reference to governing game
 	screenZIndex: 0, // this is perf trick, see Game.objects
 	

@@ -82,7 +82,6 @@ Game.prototype = {
 			if (this.isSelected(this.players[i])) {
 				var target = {x:this.players[i].origin.x+vector.x, y:this.players[i].origin.y+vector.y};
 	            this.players[i].walkTo(target);
-				console.log("switching to walk now 2");
 				this.players[i].model.switchAnimator('walk'); // will not switch if already doing this animation
 			}
         }
@@ -116,67 +115,76 @@ Game.prototype = {
 
     // all stuff happens here (called from timer in ui.js)
     frame: function() {
-			// should we call the ai logic?
-			var now = Date.now ? Date.now() : +new Date;
-			var callAi = (now - this.lastAiTime > this.aiDelay);
-			if (callAi) this.lastAiTime = now;
+		// should we call the ai logic?
+		var now = Date.now ? Date.now() : +new Date;
+		var callAi = (now - this.lastAiTime > this.aiDelay);
+		if (callAi) this.lastAiTime = now;
 		
-      var o,end = this.objects.length;
-      for(var i=0; i < end; i++) {
-        o = this.objects[i];
+		var o,end = this.objects.length;
+		for(var i=0; i < end; i++) {
+			o = this.objects[i];
 
-	            // ai
-				if (callAi && o instanceof Enemy) o.ai(this);	
+            // ai
+			if (callAi && o instanceof Enemy) o.ai(this);	
+
+			// "physics"
+			if (o.velocity.x || o.velocity.y) {
+		    if (o.solid) {
+					// move the object based on its velocity
+					// dont allow it to move into solid cells
+					var fromCellX = Math.floor(o.origin.x);
+					var fromCellY = Math.floor(o.origin.y);
+					var toCellX = Math.floor(o.origin.x + o.velocity.x);
+					var toCellY = Math.floor(o.origin.y + o.velocity.y);
+
+					if (
+						this.map.tileGrid[toCellY] && 
+						this.map.tileGrid[toCellY][toCellX] &&
+					  	this.map.tileGrid[toCellY][toCellX].collides
+					) {
+						//console.log("target blocked")
+						// cell blocked, do something
+						// we take away velocity in either direction
+						if (this.map.tileGrid[fromCellY][toCellX].collides) o.velocity.x = 0;
+						if (this.map.tileGrid[toCellY][fromCellX].collides) o.velocity.y = 0;
+						// in case only the diagonal target tile is taken, clear one direction anyways
+						if (o.velocity.x && o.velocity.y) o.velocity.y = 0; 
 	
-				// "physics"
-				if (o.velocity.x || o.velocity.y) {
-			    if (o.solid) {
-						// move the object based on its velocity
-						// dont allow it to move into solid cells
-						var fromCellX = Math.floor(o.origin.x);
-						var fromCellY = Math.floor(o.origin.y);
-						var toCellX = Math.floor(o.origin.x + o.velocity.x);
-						var toCellY = Math.floor(o.origin.y + o.velocity.y);
-	
-						if (
-							this.map.tileGrid[toCellY] && 
-							this.map.tileGrid[toCellY][toCellX] &&
-						  this.map.tileGrid[toCellY][toCellX].collides
-						) {
-							//console.log("target blocked")
-							// cell blocked, do something
-							// we take away velocity in either direction
-							if (this.map.tileGrid[fromCellY][toCellX].collides) o.velocity.x = 0;
-							if (this.map.tileGrid[toCellY][fromCellX].collides) o.velocity.y = 0;
-							// in case only the diagonal target tile is taken, clear one direction anyways
-							if (o.velocity.x && o.velocity.y) o.velocity.y = 0; 
-		
-							toCellX = Math.floor(o.origin.x + o.velocity.x);
-							toCellY = Math.floor(o.origin.y + o.velocity.y);
-							//Test.reject(this.map.tileGrid[toCellY][toCellX].collides, "the target should not be blocked anymore");
-							if (this.map.tileGrid[toCellY][toCellX].collides) continue;
-							
-		    			o.collision(); // tell object it has collided
-						}
-					} 
-					o.setOrigin(o.origin.x + o.velocity.x, o.origin.y + o.velocity.y);
-					// the active animator is called at mapui
-					//console.log(o.velocity.x+","+o.velocity.y+" "+o.origin.x+","+o.origin.y)
-				}
-				
-				// enemy too close?
-				if (o instanceof Enemy) {
-					for (var j=0; j<4; ++j) {
-						var p = this.players[j];
-						if (j == 1) console.log(p);
-						if (p && vector.distance(o.origin, p.origin) < 1) {
-							// boom!
-							o.collision(p);
-							console.log("hit");
-						}
+						toCellX = Math.floor(o.origin.x + o.velocity.x);
+						toCellY = Math.floor(o.origin.y + o.velocity.y);
+						//Test.reject(this.map.tileGrid[toCellY][toCellX].collides, "the target should not be blocked anymore");
+						if (this.map.tileGrid[toCellY][toCellX].collides) continue;
+						
+	    				o.collision(); // tell object it has collided
+					}
+				} 
+				o.setOrigin(o.origin.x + o.velocity.x, o.origin.y + o.velocity.y);
+				// the active animator is called at mapui
+				//console.log(o.velocity.x+","+o.velocity.y+" "+o.origin.x+","+o.origin.y)
+			}
+			
+			// enemy too close? and alive...? :)
+			if (o instanceof Enemy && o.health > 0) {
+				for (var j=0; j<4; ++j) {
+					var p = this.players[j];
+					if (p && vector.distance(o.origin, p.origin) < 1) {
+						// boom!
+						o.collision(p);
 					}
 				}
-      }
+			}
+			
+			// rocket hitting anyone?
+			if (o instanceof Rocket) {
+				for (var j=0; j<this.objects.length; ++j) {
+					var t = this.objects[j];
+					if (t && t instanceof Enemy && t.solid && vector.distance(o.origin, t.origin) < 1) {
+						// boom!
+						o.collision(t);
+					}
+				}
+			}
+    	}
     },
     
 	toString: function(){
