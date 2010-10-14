@@ -3,7 +3,7 @@
 
 var Model = function(spriteState) {
 	Test.assert(spriteState.src, "the model should have a sprite");
-	
+
 	$.extend(this, spriteState);
 };
 
@@ -11,7 +11,7 @@ Model.prototype = {
 	cls: 'Model',
 	src: null, // set from json ("spriteState")
     img: null, // set from gameObj.prototype.preload, using src
-	
+
 	animators: null, // an array with animators
 	currentAnimator: null, // the current playing animator, if any
 	currentSprite: null, // sprite index
@@ -21,10 +21,10 @@ Model.prototype = {
 
     stopAnimator: function() {
         if (!this.currentAnimator) return;
-        
+
         Test.assert(this.currentAnimator in this.animators,this.currentAnimator+" missing?");
         Test.assert('function' == typeof this.animators[this.currentAnimator],"anim == function");
-        
+
         this.animators[this.currentAnimator].call(this, 'stop');
         this.currentAnimator = null;
     },
@@ -32,11 +32,11 @@ Model.prototype = {
     playAnimator: function(name) {
         Test.assert(name in this.animators,name+" missing?");
         Test.assert('function' == typeof this.animators[name],"anim == function (for "+name+")");
-        
+
         this.currentAnimator = name;
         this.animators[name].call(this, 'init');
     },
-	
+
 	switchAnimator: function(name){
 		Test.assert(name, "we need an animator");
 		if (this.currentAnimator && this.currentAnimator != name) this.stopAnimator();

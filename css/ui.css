@@ -23,6 +23,12 @@ html, body {
 	right: 0;
 	bottom: 0;
 	overflow: hidden;
+
+	user-select: none;
+	-o-user-select:none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
 }
 
 #map {
@@ -46,7 +52,7 @@ html, body {
 
 #coord {
 	background-color: black;
-	font-size: 11px;	
+	font-size: 11px;
 }
 
 .characters {padding:10px 0 70px;overflow:hidden}
@@ -83,22 +89,17 @@ div.character {
 	z-index: 1;
 	cursor: default;
 	color:rgba(255,200,10,0.5);
-	user-select: none;
-	-o-user-select:none;
-	-moz-user-select: none;
-	-khtml-user-select: none;
-	-webkit-user-select: none;
-	
+
 	-webkit-transition: all 0.5s linear;
 	-moz-transition: all 0.5s linear;
 	-o-transition: all 0.5s linear;
 	transition: all 0.5s linear;
-	
+
 	-webkit-border-radius: 10px 0 / 10px 0;
 	-moz-border-radius: 10px 0 / 10px 0;
 	border-radius: 10px 0 / 10px 0;
-	
-	
+
+
 }
 div.character.selected {
 	border: 2px solid #3fa;
@@ -111,7 +112,7 @@ div.character.selected {
 	-moz-transform: rotate(3deg);
 	-o-transform: rotate(3deg);
 	transform: rotate(3deg);
-	  
+
 }
 
 div.character div.img {
@@ -135,7 +136,7 @@ div.character div.status {
 	font-size: 11px;
 	color: red;
 	background-color: rgba(55, 0, 0, 0.3);
-	
+
 	-webkit-border-radius: 0 0 10px 0;
 
 }

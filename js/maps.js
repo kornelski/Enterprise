@@ -2,7 +2,7 @@
 // the object should be replaced by a json containing
 // one object for every map that contains the meta
 // data for that object, keyed by its (unique) name.
-// replacement is done for fast access. this is only a 
+// replacement is done for fast access. this is only a
 // placeholder.
 
 // API:
@@ -70,7 +70,7 @@ var Maps = {
 	        [23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,18,18,18,18,18,18,18,18,22,22,22,22,22,22,22,22,22,22,22,22,18,22,22,18,18,18,10,10,10,10,10,10,18,18,18,18,18,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,17,17,17,17,17,17,17,17]
         ],
 		spawnPoint: {x:28, y:24}, // this is where player starts
-		squadSize: 3, // number of characters you start with (1-4)        
+		squadSize: 3, // number of characters you start with (1-4)
 		gameObjs: [
 			//{type: 'enemy', x:22, y:12},
 			{type: 'enemy', x:45, y:40, config:{

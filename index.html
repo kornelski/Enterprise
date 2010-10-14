@@ -32,11 +32,11 @@
 		    </div>
 			<div id="toggleAll">All</div>
 			<div id="moreCowbell">More</div>
-		
+
 			<div id="hud-map">
 				<div id="hud-mini-focus"></div>
 			</div>
-			
+
 			<label><input id="sea" type="checkbox"/> Flying carpet</label><br/>
 			<label><input id="collisions" type="checkbox"/> Show walls</label><br/>
 			<label>Tip: hold space to shoot!</label><br/>
@@ -45,7 +45,7 @@
 			<div id="coord"></div>
 		</div>
 		<canvas id="map" width="800" height="600"></canvas>
-		
+
 		<!-- application config -->
 		<script src="js/config.js"></script>
 
@@ -81,7 +81,7 @@
 		    delete window.hud;
 			delete window.sea;
 			delete window.collisions;
-		
+
 			var hud = new Hud(); // always use the same hud, but transfer it
 			new UI(new Game(), $('#enterprise'));
 		</script>

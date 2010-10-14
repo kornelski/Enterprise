@@ -6,7 +6,7 @@ var Enemy = function(x,y,config) {
 	this.setModel('player');
 	this.setOrigin(x,y);
     
-  this.walkingSpeed = Config.enemyBaseWalkSpeed + Config.enemyBaseWalkSpeed*Math.random();  
+    this.walkingSpeed = Config.enemyBaseWalkSpeed + Config.enemyBaseWalkSpeed*Math.random();
 	
 	// copy all properties from the config to this object
 	// will fill in the api from the prototype

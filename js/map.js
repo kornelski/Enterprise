@@ -3,17 +3,17 @@
 var Map = function(mapLayout){
 	this.mapLayout = mapLayout; // inside this class, when "cached", it will be named "config"
 	this.load(mapLayout);
-	
+
 	Test.assert(this.unitsX > 0, "A map needs tiles X");
 	Test.assert(this.unitsY > 0, "A map needs tiles Y");
 
 	this.initGrid();
-	
+
 };
 
 Map.prototype = {
 	tileGrid: null, // two dimensional array containing the tiles (references to Tile objects) to be drawn
-	
+
 	load: function(mapLayout){
 		this.name = mapLayout.get("name");
 		this.unitsX = mapLayout.get("width");
@@ -22,7 +22,7 @@ Map.prototype = {
 		this.objects = mapLayout.get("gameObjs");
 		this.squadSize = mapLayout.get("squadSize");
 	},
-	
+
 	initGrid: function(){
 		var mapLayout = this.mapLayout;
 		var tiles = Tiles; // Tiles is a global object literal, has tiles by name
@@ -37,7 +37,7 @@ Map.prototype = {
 			}
 		}
 	},
-	
+
 	getTile: function(cell) {
 	    if (cell.x < 0 || cell.x >= this.unitsX || cell.y < 0 || cell.y >= this.unitsY) {
 	        // TOFIX: static oob tile
@@ -53,7 +53,7 @@ Map.prototype = {
 
 	    return (this.tileGrid[cell.y] || this.tileGrid[0])[cell.x];
     },
-	
+
 	toString: function(){
 		return "Map["+this.name+", "+this.unitsX+","+this.unitsY+"]";
 	},

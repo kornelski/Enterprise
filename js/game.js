@@ -149,12 +149,12 @@ Game.prototype = {
 						if (this.map.tileGrid[toCellY][fromCellX].collides) o.velocity.y = 0;
 						// in case only the diagonal target tile is taken, clear one direction anyways
 						if (o.velocity.x && o.velocity.y) o.velocity.y = 0; 
-	
+
 						toCellX = Math.floor(o.origin.x + o.velocity.x);
 						toCellY = Math.floor(o.origin.y + o.velocity.y);
 						//Test.reject(this.map.tileGrid[toCellY][toCellX].collides, "the target should not be blocked anymore");
 						if (this.map.tileGrid[toCellY][toCellX].collides) continue;
-						
+
 	    				o.collision(); // tell object it has collided
 					}
 				} 
@@ -162,7 +162,7 @@ Game.prototype = {
 				// the active animator is called at mapui
 				//console.log(o.velocity.x+","+o.velocity.y+" "+o.origin.x+","+o.origin.y)
 			}
-			
+
 			// enemy too close? and alive...? :)
 			if (o instanceof Enemy && o.health > 0) {
 				for (var j=0; j<4; ++j) {
