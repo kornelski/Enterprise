@@ -2,7 +2,7 @@
 
 This is a `<canvas>`-based clone of Amiga/MSDOS game "Syndicate" ("Enterprise", get it? ;).
 
-The game is not finished — it was written in 24 hours. Unfortunately you can't kill enemies, but you can shoot rockets by holding <kbd>space</kbd> and it looks awesome :)
+The game is not finished — the initial version was written in 24 hours. Click to walk around and press <kbd>space</kbd> to shoot stuff. Weapons are given randomly. There are some cheats (click settings).
 
 * **[Live demo](http://pornel.net/gamejam/) or [here](http://enterprise.qfox.nl/)**
 
