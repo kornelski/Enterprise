@@ -5,42 +5,39 @@ var Hud = function(){
 	var self = this;
 	var $chars = $('.character').click(function(){
 		Test.assert(this.id.length == 2, "assuming c#");
-		var id = +this.id[1]; // so the actual id of the panel clicked can be found in the id in the dom
-		Test.assert(id in {1:1,2:1,3:1,4:1}, "assuming the id's are one of 1234");
-		
-		// needs to be a switch (1,2,4,8)
-		if (id == 3) id = 4;
-		else if (id == 4) id = 8;
-		 
-		self.game.selectedCharacter ^= id; // xorring the selected character flag toggles the selection for this char
-		if (self.game.selectedCharacter & id) this.className = 'selected character';
+		var id = +this.id[1] - 1; // so the actual id of the panel clicked can be found in the id in the dom. in the dom, id's are 1-4 (whereas player.id is 0-3)
+		Test.assert(id in {0:1,1:1,2:1,3:1}, "assuming the id's are one of 0123");
+		var p = self.game.getPlayerById(id);
+		if (!p) return; // dead player, dont select
+
+		self.game.selectedCharacter ^= p.flag; // xorring the selected character flag toggles the selection for this char
+		if (self.game.isSelected(p)) this.className = 'selected character';
 		else this.className = 'character';
 	});
+
+	$('.release-info').html(Config.releaseInfo);
 
 	$('#moreCowbell').click(function(){
 	    self.game.paused = !self.game.paused;
 	});
-	
+
 	$('#toggleAll').click(function(){
-		if (self.game.selectedCharacter == (1|2|4|8)) {
-			// deselect all
-			$chars.click();
-		} else {
-			// select any unselected
-			if ((self.game.selectedCharacter & 1) == 0) $chars.filter(':nth-child(1)').click(); 
-			if ((self.game.selectedCharacter & 2) == 0) $chars.filter(':nth-child(2)').click(); 
-			if ((self.game.selectedCharacter & 4) == 0) $chars.filter(':nth-child(3)').click(); 
-			if ((self.game.selectedCharacter & 8) == 0) $chars.filter(':nth-child(4)').click();
-		} 
+		self.game.toggleAllPlayers();
 	});
 
 	this.lastHealth = [0,0,0,0];
 	this.lastSprite = [0,0,0,0];
+	this.lastWeapon = [null,null,null,null];
+	this.lastAmmo = [null,null,null,null];
+	this.lastBackpack = [null, null, null, null];
 };
 Hud.prototype = {
 	lastHealth: null, // players health at last update (prevents useless paints)
 	lastSprite: null, // which sprite per was shown per character
-	
+	lastWeapon: null, // last known armed weapon
+	lastAmmo: null, // last known used ammo
+	lastBackpack: null, // last known used backpack
+
 	game: null, // a hook to the active game
 
 	setGame: function(game){
@@ -66,16 +63,36 @@ Hud.prototype = {
 		for (var i=0; i<4; ++i) {
 			var p = this.game.players[i];
 			if (p) {
-				if (this.lastHealth[i] != p.health) {
-					this.lastHealth[i] = p.health;
-					$('#c'+(i+1)+'-status').html(p.health.toFixed(0)+'%');
+				var id = p.id; // 0..3
+				if (this.lastHealth[id] != p.health) {
+					this.lastHealth[id] = p.health;
+					if (p.health > 0) {
+						$('#c'+(id+1)+'-status').html(p.health.toFixed(0)+'%');
+					}
 				}
-				if (this.lastSprite[i] != p.model.currentSprite) {
-					this.lastSprite[i] = p.model.currentSprite;
-					$('#c'+(i+1)+' > .img').css('background-position', (-(p.model.currentSprite * p.model.width)-12)+'px 0');
+				if (this.lastSprite[id] != p.model.currentSprite) {
+					this.lastSprite[id] = p.model.currentSprite;
+					$('#c'+(id+1)+' > .img').css('background-position', (-(p.model.currentSprite * p.model.width)-12)+'px 0');
+				}
+				Test.assert('armed' in p, "we need easy access to currently armed weapon");
+				if (this.lastWeapon[id] != p.armed) {
+					this.lastWeapon[id] = p.armed;
+					$('#c'+(id+1)+'-weapon').css({'background-image': p.armed ? 'url('+p.armed.inventoryIcon+')' : 'none'});
+				}
+				if ((p.armed && this.lastAmmo[id]) || this.lastAmmo[id] != p.armed.ammo) {
+					this.lastAmmo[id] = p.armed && p.armed.ammo;
+					$('#c'+(id+1)+'-ammo').css({'background-image': p.armed && p.armed.ammo ? 'url('+p.armed.ammo.inventoryIcon+')' : 'none' });
+				}
+				if (this.lastBackpack[id] != p.backpack.name) {
+					this.lastBackpack[id] = p.backpack.name;
+					$('#c'+(id+1)+'-backpack').html('<img src="'+p.backpack.imgUrl+'"/>');
 				}
 			}
 		}
+
+		$('#details').html(
+			'actors:'+this.game.actors.length
+		);
 	},
 
 0:0};

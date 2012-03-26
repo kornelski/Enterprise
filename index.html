@@ -7,84 +7,75 @@
 		<link rel=stylesheet href="css/ui.css"/>
 	</head>
 	<body id="enterprise">
-		<div id="hud">
-		    <div class="characters">
-			    <div id="c1" class="character">1
-    				<div class="img"></div>
-    				<div id="c1-progress" class="progress"></div>
-    				<div id="c1-status" class="status">0%</div>
-    			</div>
-    			<div id="c2" class="character">2
-    				<div class="img"></div>
-    				<div id="c2-progress" class="progress"></div>
-    				<div id="c2-status" class="status">0%</div>
-    			</div>
-    			<div id="c3" class="character">3
-    				<div class="img"></div>
-    				<div id="c3-progress" class="progress"></div>
-    				<div id="c3-status" class="status">0%</div>
-    			</div>
-    			<div id="c4" class="character">4
-    				<div class="img"></div>
-    				<div id="c4-progress" class="progress"></div>
-    				<div id="c4-status" class="status">0%</div>
-    			</div>
-		    </div>
-			<div id="toggleAll">All</div>
-			<div id="moreCowbell">More</div>
+		<div id="ui">
+			<div id="hud">
+				<div class="release-info"></div>
+			    <div class="characters">
+				    <div id="c1" class="character">1
+	    				<div class="img"></div>
+	    				<div id="c1-weapon" class="weapon"></div>
+	    				<div id="c1-ammo" class="ammo"></div>
+						<div id="c1-backpack" class="bag"></div>
+	    				<div id="c1-progress" class="progress"></div>
+	    				<div id="c1-status" class="status">0%</div>
+	    			</div>
+	    			<div id="c2" class="character">2
+	    				<div class="img"></div>
+	    				<div id="c2-weapon" class="weapon"></div>
+	    				<div id="c2-ammo" class="ammo"></div>
+						<div id="c2-backpack" class="bag"></div>
+	    				<div id="c2-progress" class="progress"></div>
+	    				<div id="c2-status" class="status">0%</div>
+	    			</div>
+	    			<div id="c3" class="character">3
+	    				<div class="img"></div>
+	    				<div id="c3-weapon" class="weapon"></div>
+	    				<div id="c3-ammo" class="ammo"></div>
+						<div id="c3-backpack" class="bag"></div>
+	    				<div id="c3-progress" class="progress"></div>
+	    				<div id="c3-status" class="status">0%</div>
+	    			</div>
+	    			<div id="c4" class="character">4
+	    				<div class="img"></div>
+	    				<div id="c4-weapon" class="weapon"></div>
+	    				<div id="c4-ammo" class="ammo"></div>
+						<div id="c4-backpack" class="bag"></div>
+	    				<div id="c4-progress" class="progress"></div>
+	    				<div id="c4-status" class="status">0%</div>
+	    			</div>
+			    </div>
+				<div id="toggleAll">All</div>
+				<div id="moreCowbell">More</div>
 
-			<div id="hud-map">
-				<div id="hud-mini-focus"></div>
+				<div id="hud-map">
+					<div id="hud-mini-focus"></div>
+				</div>
+
+				<label>Tip: hold space to shoot!</label><br/>
+	            <a href="screenshots/" target="_blank">Screenshots</a><br/>
+	            <a href="#secret" onclick="location.hash='#secret';location.reload()">other map</a><br/>
+				<div id="coord"></div>
+				<div id="tilename"></div>
+				<a href="#" id="editTile">edit tile</a><Br/>
+				<a href="#" id="settings">settings</a>
+			<div id="details"></div>
 			</div>
-
-			<label><input id="sea" type="checkbox"/> Flying carpet</label><br/>
-			<label><input id="collisions" type="checkbox"/> Show walls</label><br/>
-			<label>Tip: hold space to shoot!</label><br/>
-            <a href="screenshots/">Screenshots</a><br/>
-            <a href="#secret" onclick="location.hash='#secret';location.reload()">other map</a><br/>
-			<div id="coord"></div>
+			<canvas id="map" width="800" height="600"></canvas>
 		</div>
-		<canvas id="map" width="800" height="600"></canvas>
+		<div id="loader">
+			<div id="count"></div>
+			<div id="files"></div>
+		</div>
 
 		<!-- application config -->
 		<script src="js/config.js"></script>
 
-		<script src="js/lib/jquery-1.4.2.min.js"></script>
-		<script src="js/lib/jquery.mousewheel.min.js"></script>
-		<script src="js/test.js"></script>
-		<script src="js/vector.js"></script>
-		<script src="js/model.js"></script>
-		<script src="js/gameobj.js"></script>
-		<script src="js/rocket.js"></script>
-		<script src="js/player.js"></script>
-		<script src="js/game.js"></script>
-		<script src="js/map.js"></script>
-		<script src="js/maplayout.js"></script>
-		<script src="js/tile.js"></script>
-		<script src="js/mapui.js"></script>
-		<script src="js/mapui.js"></script>
-		<!--<script src="js/cell.js"></script>-->
-		<script src="js/map.js"></script>
-		<script src="js/maplayout.js"></script>
-		<script src="js/mapui.js"></script>
-		<script src="js/ui.js"></script>
-		<script src="js/hud.js"></script>
-		<script src="js/enemy.js"></script>
-		<script src="js/particle.js"></script>
-		<script src="js/placeholder.js"></script>
-		<!-- initialization data, should not depend on existence of other classes -->
-		<script src="js/tiles.js"></script>
-		<script src="js/models.js"></script>
-		<script src="js/maps.js"></script>
+		<!-- jquery *barf* -->
+		<script src="js/lib/jquery/jquery-1.4.4.min.js"></script>
 
-		<script>
-		    delete window.map; // stop HTML IDs leaking into global namespace
-		    delete window.hud;
-			delete window.sea;
-			delete window.collisions;
-
-			var hud = new Hud(); // always use the same hud, but transfer it
-			new UI(new Game(), $('#enterprise'));
-		</script>
+		<!-- use this to load the rest... (see init.js to load additional resources) -->
+		<script src="js/tools/test.js"></script>
+		<script src="js/tools/loadqueue.js"></script>
+		<script src="js/init.js"></script>
 	</body>
 </html>

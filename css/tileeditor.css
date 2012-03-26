@@ -1,0 +1,8 @@
+/* style sheet for the tile editor */
+
+#tileEditor {
+	border: 1px solid black;
+	background-color: red;
+}
+
+

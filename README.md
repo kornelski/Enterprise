@@ -1,6 +1,6 @@
 #HTML5 Game Jam entry: *Enterprise*
 
-This is a `<canvas>`-based clone of Amiga/MSDOS game “Syndicate”.
+This is a `<canvas>`-based clone of Amiga/MSDOS game "Syndicate" ("Enterprise", get it? ;).
 
 The game is not finished — it was written in 24 hours. Unfortunately you can't kill enemies, but you can shoot rockets by holding <kbd>space</kbd> and it looks awesome :)
 
@@ -8,6 +8,10 @@ The game is not finished — it was written in 24 hours. Unfortunately you can't
 
 * **[Screenshots](http://pornel.net/gamejam/screenshots/)**
 
-**For best performance [use Opera 10.70](http://my.opera.com/desktopteam/blog/).**
+* ** [Blog post of game jam](http://qfox.nl/weblog/213)
 
-In WebKit it supports multitouch trackpad scrolling. Works on iDevices, albeit slowly (iOS3 is useless, iOS4 is tolerable).
+** Try Opera or Webkit for speed, or Firefox if it plays nice on your machine **
+
+** Works on mobile too! In WebKit it supports multitouch trackpad scrolling. Works on iDevices, albeit slowly (iOS3 is useless, iOS4 is tolerable).
+
+

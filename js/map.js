@@ -1,7 +1,7 @@
 // map instance, loads a MapLayout
 
 var Map = function(mapLayout){
-	this.mapLayout = mapLayout; // inside this class, when "cached", it will be named "config"
+	this.mapLayout = mapLayout; // config of map
 	this.load(mapLayout);
 
 	Test.assert(this.unitsX > 0, "A map needs tiles X");
@@ -12,47 +12,79 @@ var Map = function(mapLayout){
 };
 
 Map.prototype = {
-	tileGrid: null, // two dimensional array containing the tiles (references to Tile objects) to be drawn
+	// copies everything from mapLayout (see maps.js)
+	width: 0,
+	height: 0,
+	spawnPoint: null,
+	tiles: null,
+	name: '',
+	squadSize: 0,
+	actors: null,
+	collisions: null,
+
+	mapLayout: null, // just a reference, try not to use it...
+
+	// see load
+	cellGrid: null, // two dimensional array containing the tiles (references to Tile objects) to be drawn
 
 	load: function(mapLayout){
 		this.name = mapLayout.get("name");
 		this.unitsX = mapLayout.get("width");
 		this.unitsY = mapLayout.get("height");
 		this.spawnPoint = mapLayout.get("spawnPoint");
-		this.objects = mapLayout.get("gameObjs");
+		this.actors = mapLayout.get("actors");
 		this.squadSize = mapLayout.get("squadSize");
 	},
 
 	initGrid: function(){
 		var mapLayout = this.mapLayout;
-		var tiles = Tiles; // Tiles is a global object literal, has tiles by name
-		//var collisions = Tile.get('collisions');
-		var grid = this.tileGrid = [];
+
+		var grid = this.cellGrid = [];
 		for (var y=0, ny=this.unitsY; y<ny; ++y) {
 			grid[y] = [];
 			for (var x=0, nx=this.unitsX; x<nx; ++x) {
-				var tile = grid[y][x] = Tile.get(mapLayout.getTileName(y,x));
-				Test.assert(grid[y][x], "Expecting a tile");
-				Test.assert(grid[y][x] instanceof Tile, "expecting a real tile");
+				var tile = grid[y][x] = new Cell(x,y,Tile.get(mapLayout.getTileName(y,x)));
+				Test.assert(grid[y][x], "Expecting a cell with a tile");
+				Test.assert(grid[y][x] instanceof Cell, "expecting a real tile");
+				Test.assert(grid[y][x].tile instanceof Tile, "expecting a real tile");
 			}
 		}
 	},
 
-	getTile: function(cell) {
-	    if (cell.x < 0 || cell.x >= this.unitsX || cell.y < 0 || cell.y >= this.unitsY) {
+	getCell: function(cellpos, y) { // either an object literal, {x,y}, or an x and y as arguments
+		var x = cellpos.x;
+		if (typeof x != 'number') x = cellpos;
+		else y = cellpos.y;
+
+	    Test.assert(Math.round(x) == x, "coords must be integer");
+	    Test.assert(Math.round(y) == y, "coords must be integer");
+	    if (x < 0 || x >= this.unitsX || y < 0 || y >= this.unitsY) {
 	        // TOFIX: static oob tile
-			return Tile.get('water');//tileGrid[0][0];
+			return null;
         }
-	    Test.assert(Math.round(cell.x) == cell.x, "coords must be integer");
-	    Test.assert(Math.round(cell.y) == cell.y, "coords must be integer");
-	    Test.assert('undefined' != typeof this.tileGrid[cell.y], "row doesn't exist"+cell.y);
-	    Test.assert('undefined' != typeof this.tileGrid[cell.y][cell.x], "col doesn't exist"+cell.x);
 
-		if (this.tileGrid[cell.y][cell.x].collides && $('#collisions')[0].checked) return Tile.get('wall');
-		//else Test.assert(this.tileGrid[cell.y][cell.x].)
+	    Test.assert('undefined' != typeof this.cellGrid[y], "row doesn't exist"+y);
+	    Test.assert('undefined' != typeof this.cellGrid[y][x], "col doesn't exist"+x);
 
-	    return (this.tileGrid[cell.y] || this.tileGrid[0])[cell.x];
+	    return this.cellGrid[y][x];
     },
+
+    getTile: function(cellpos) {
+        var cell = this.getCell(cellpos);
+        if (!cell) return Tile.get('water');
+
+		if (Config.showCollisionTiles && cell.tile.collides) return Tile.get('wall');
+
+        return cell.tile;
+    },
+
+    // how's that different from mapLayout.get("width") and unitX?
+	width: function(){
+		return this.mapLayout.width;
+	},
+	height: function(){
+		return this.mapLayout.height;
+	},
 
 	toString: function(){
 		return "Map["+this.name+", "+this.unitsX+","+this.unitsY+"]";
